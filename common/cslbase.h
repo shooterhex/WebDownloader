@@ -49,10 +49,10 @@ typedef std::function<void(uint32_t)>  PropertyNotification;
 class PropertyTrigger
 {
 public:
-    PropertyTrigger() noexcept{};
+    PropertyTrigger() noexcept;
 	PropertyTrigger(const PropertyTrigger&) = delete;
 	PropertyTrigger& operator=(const PropertyTrigger&) = delete;
-    ~PropertyTrigger() noexcept{};
+    ~PropertyTrigger() noexcept;
 
 	void ClearNotifications() noexcept;
     uintptr_t AddNotification(PropertyNotification&& pn);

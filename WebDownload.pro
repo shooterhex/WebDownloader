@@ -44,3 +44,6 @@ SOURCES += \
     viewModel/command/command.cpp \
     viewModel/viewModel.cpp \
     window/mainWindow.cpp
+
+FORMS += \
+    mainWindow.ui
