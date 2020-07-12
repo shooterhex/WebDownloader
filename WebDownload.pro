@@ -45,6 +45,9 @@ SOURCES += \
     viewModel/command/command.cpp \
     viewModel/viewModel.cpp \
     window/mainWindow.cpp
-
+LIBS+= -L"D:\tool\curl-7.71.1\lib\curl-7.71.1\x86 Release\lib" -llibcurl_a
 FORMS += \
     mainWindow.ui
+#DEFINES+=CURL_STATICLIB
+DEFINES+=BUILDING_LIBCURL \
+    HTTP_ONLY
