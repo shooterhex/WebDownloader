@@ -1,5 +1,5 @@
 #include"model.h"
-
+using namespace  std;
 Model::Model()
 {
     //给数据成员分配空间

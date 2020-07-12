@@ -2,7 +2,13 @@
 #include"../common/cslbase.h"
 #include <QMessageBox>
 #include <string>
-#include <curl/curl.h>
+#include "../common/curl/curl.h"
+class MemoryStruct {
+public:
+  char* memory;
+  size_t size;
+  MemoryStruct() { memory = nullptr; size = 0; }
+};
 
 class Model:public PropertyTrigger
 {
@@ -31,9 +37,3 @@ private:
 };
 
 
-class MemoryStruct {
-public:
-  char* memory;
-  size_t size;
-  MemoryStruct() { memory = nullptr; size = 0; }
-};

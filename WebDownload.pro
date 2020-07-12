@@ -32,6 +32,7 @@ CONFIG += c++17
 HEADERS += \
     App/App.h \
     common/cslbase.h \
+    common/curl/curl.h \
     model/model.h \
     viewModel/viewModel.h \
     window/mainWindow.h
