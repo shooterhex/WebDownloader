@@ -2,6 +2,9 @@
 #include"../common/cslbase.h"
 #include <QMessageBox>
 #include <string>
+
+//Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
+#ifdef WINDOWS
 #include "../common/curl/curl.h"
 #define CURL_STATICLIB
 #pragma comment(lib, "Normaliz.lib")
@@ -9,6 +12,11 @@
 #pragma comment(lib, "Wldap32.lib")
 #pragma comment(lib, "Crypt32.lib")
 #pragma comment(lib, "advapi32.lib")
+#else
+//Linux环境下，直接从软件包管理器安装curl静态库
+#include <curl/curl.h>
+#endif
+
 class MemoryStruct {
 public:
   char* memory;
