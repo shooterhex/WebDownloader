@@ -4,6 +4,11 @@
 #include <string>
 #include "../common/curl/curl.h"
 #define CURL_STATICLIB
+#pragma comment(lib, "Normaliz.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Wldap32.lib")
+#pragma comment(lib, "Crypt32.lib")
+#pragma comment(lib, "advapi32.lib")
 class MemoryStruct {
 public:
   char* memory;
