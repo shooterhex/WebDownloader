@@ -1,16 +1,16 @@
 #include"mainWindow.h"
 #include"ui_mainWindow.h"
-
+#include<QFileDialog>
 #include<QMessageBox>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    //setWindowTitle("服装绘图");
-    connect(ui->pushButton_2,SIGNAL(clicked()),this,SLOT(OnBtnDownload()));
-
+    connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(OnBtnDownload()));
+    connect(ui->chooseDirPushButton, SIGNAL(clicked()), this, SLOT(OnBtnChooseDir()));
 }
 
 MainWindow::~MainWindow()
@@ -27,12 +27,30 @@ PropertyNotification MainWindow::get_Notification()
                     }
                 };
 }
+
 void MainWindow::set_DownloadCommand(CommandFunc&& cf)
 {
     m_cmdFunc_Download = std::move(cf);
 };
+
+void MainWindow::setViewModel(ViewModel* viewModel)
+{
+    m_viewModel = viewModel;
+}
+
 void MainWindow::OnBtnDownload()
 {
-    //QMessageBox::information(nullptr,"nn","ss");
-    m_cmdFunc_Download(std::any());//此处语法要求必须传参
+    set_DownloadCommand(m_viewModel->get_DownloadCommand());
+    std::string dir = ui->dirTextEdit->toPlainText().toStdString();
+    m_viewModel->get_SetDirCommand()(dir);
+    std::string url = ui->urlTextEdit->toPlainText().toStdString();
+    m_viewModel->get_SetUrlCommand()(url);
+
+    m_cmdFunc_Download(std::any()); //Dummy argument
+}
+
+void MainWindow::OnBtnChooseDir()
+{
+    QString dirName = QFileDialog::getSaveFileName(this, "Select destination directory");
+    ui->dirTextEdit->setText(dirName);
 }
