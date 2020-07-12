@@ -54,6 +54,7 @@ else {
     FORMS += \
         mainWindow.ui
     #DEFINES+=CURL_STATICLIB
+    DEFINES+=WINDOWS 
     DEFINES+=BUILDING_LIBCURL \
         HTTP_ONLY
 }
