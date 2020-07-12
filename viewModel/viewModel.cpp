@@ -31,4 +31,25 @@ PropertyNotification ViewModel::get_notification()
                     this->Fire(uID);
                 }
             };
-}
+};
+CommandFunc ViewModel::get_DownloadCommand()
+{
+    return [this](std::any&& param)->bool
+    {
+        return this->m_spModel->downLoad();
+    };
+};
+CommandFunc ViewModel::get_SetDirCommand()
+{
+    return [this](std::any&& param)->bool
+    {
+        return this->m_spModel->setDir(std::any_cast<std::string>(param));
+    };
+};
+CommandFunc ViewModel::get_SetUrlCommand()
+{
+    return [this](std::any&& param)->bool
+    {
+        return this->m_spModel->setUrl(std::any_cast<std::string>(param));
+    };
+};

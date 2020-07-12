@@ -3,19 +3,21 @@
 #include<string>
 class Model:public PropertyTrigger
 {
-    Model();
+
 public:
+    Model();
+
     std::shared_ptr<std::string> get_Url();
     std::shared_ptr<std::string> get_Dir();
     std::shared_ptr<std::string> get_Htmltxt();
 
-    //待实现
-    bool downLoad();//暴露接口，由viewModel层触发
+    //待实现,以下3个接口都将暴露给viewModel,由viewModel层触发
+    bool downLoad();//
                     //读取_dir,_url,将下载的内容存入_htmltxt
                     //fire
                     //函数正常执行,返回true
     bool setUrl(const std::string& str);//设置_url
-    bool setDir(const std::string& str);//设置_url
+    bool setDir(const std::string& str);//设置_Dir
 
 
 private:
