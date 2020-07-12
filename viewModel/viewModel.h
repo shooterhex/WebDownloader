@@ -1,3 +1,5 @@
+#pragma once
+
 #include"../common/cslbase.h"
 #include"../model/model.h"
 #include<memory>
