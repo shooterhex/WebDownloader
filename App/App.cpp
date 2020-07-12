@@ -9,7 +9,7 @@ void App::run()
     //viewModel和Model的绑定，同时完成了spModel绑定VM的消息
     _viewModel.SetModel(spModel);
 
-
     _mainWindow.set_DownloadCommand(_viewModel.get_DownloadCommand());
+    _mainWindow.setViewModel(&_viewModel);
     _mainWindow.show();
 }
