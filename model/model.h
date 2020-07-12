@@ -1,6 +1,9 @@
 #pragma once
 #include"../common/cslbase.h"
-#include<string>
+#include <QMessageBox>
+#include <string>
+#include <curl/curl.h>
+
 class Model:public PropertyTrigger
 {
 
@@ -24,4 +27,13 @@ private:
     std::shared_ptr<std::string> _htmltxt;
     std::shared_ptr<std::string> _dir;
     std::shared_ptr<std::string> _url;
+    MemoryStruct mem;
+};
+
+
+class MemoryStruct {
+public:
+  char* memory;
+  size_t size;
+  MemoryStruct() { memory = nullptr; size = 0; }
 };
