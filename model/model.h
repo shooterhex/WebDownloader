@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <string>
 #include "../common/curl/curl.h"
+#define CURL_STATICLIB
 class MemoryStruct {
 public:
   char* memory;
