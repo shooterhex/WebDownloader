@@ -26,6 +26,7 @@ std::shared_ptr<std::string> Model::get_Htmltxt()
 bool Model::downLoad()
 {
 
+    QMessageBox::information(nullptr,"download","begin");//测试用
     //无法保证url和dir合法，先进行简单检查
     if(*_url==""||*_dir=="")
     {

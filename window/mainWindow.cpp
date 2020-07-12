@@ -1,5 +1,7 @@
 #include"mainWindow.h"
 #include"ui_mainWindow.h"
+
+#include<QMessageBox>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -7,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //setWindowTitle("服装绘图");
-
+    connect(ui->pushButton_2,SIGNAL(clicked()),this,SLOT(OnBtnDownload()));
 
 }
 
@@ -28,4 +30,9 @@ PropertyNotification MainWindow::get_Notification()
 void MainWindow::set_DownloadCommand(CommandFunc&& cf)
 {
     m_cmdFunc_Download = std::move(cf);
+};
+void MainWindow::OnBtnDownload()
+{
+    //QMessageBox::information(nullptr,"nn","ss");
+    m_cmdFunc_Download(std::any());//此处语法要求必须传参
 }

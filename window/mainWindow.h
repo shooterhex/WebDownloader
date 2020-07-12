@@ -19,6 +19,8 @@ class MainWindow:public QMainWindow
 
         //待实现，要求点击点击下载按钮，执行m_cmdFunc_Download()
         void set_DownloadCommand(CommandFunc&& cf);
+private slots:
+        void OnBtnDownload();
     private:
         Ui::MainWindow *ui;
         std::shared_ptr<CommandFunc> _downloadCommand;
