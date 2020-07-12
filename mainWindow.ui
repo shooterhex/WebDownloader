@@ -2,35 +2,45 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
     <width>520</width>
-    <height>362</height>
-   </rect>
+    <height>320</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>520</width>
+    <height>320</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>WebDownload</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="urlTextEdit">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>30</y>
-      <width>104</width>
-      <height>71</height>
+      <width>381</width>
+      <height>51</height>
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit_2">
+   <widget class="QTextEdit" name="dirTextEdit">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>150</y>
-      <width>104</width>
-      <height>71</height>
+      <x>100</x>
+      <y>110</y>
+      <width>381</width>
+      <height>51</height>
      </rect>
     </property>
    </widget>
@@ -38,61 +48,71 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>60</y>
-      <width>54</width>
-      <height>12</height>
+      <y>30</y>
+      <width>71</width>
+      <height>16</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>URL</string>
+     <string>网址URL：</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
-      <width>54</width>
-      <height>12</height>
+      <y>110</y>
+      <width>71</width>
+      <height>16</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>DIR</string>
+     <string>下载目录：</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="chooseDirPushButton">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>190</y>
-      <width>75</width>
-      <height>23</height>
+      <x>270</x>
+      <y>200</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>浏览文件</string>
+     <string>选择目录</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="startPushButton">
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>190</y>
-      <width>75</width>
-      <height>23</height>
+      <y>200</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>开始下载</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="fileTypeComboBox">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>60</y>
-      <width>69</width>
-      <height>22</height>
+      <x>100</x>
+      <y>200</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="currentText">
@@ -117,9 +137,9 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>60</y>
-      <width>61</width>
+      <x>20</x>
+      <y>200</y>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
@@ -130,7 +150,7 @@
      </font>
     </property>
     <property name="text">
-     <string>文件类型</string>
+     <string>文件类型：</string>
     </property>
    </widget>
   </widget>
@@ -140,7 +160,7 @@
      <x>0</x>
      <y>0</y>
      <width>520</width>
-     <height>23</height>
+     <height>30</height>
     </rect>
    </property>
   </widget>
