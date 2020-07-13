@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
+<<<<<<< HEAD
 <!-- Written by QtCreator 4.12.2, 2020-07-13T09:46:13. -->
+=======
+<!-- Written by QtCreator 4.11.1, 2020-07-12T22:25:44. -->
+>>>>>>> 10e63602672e659f97b3f0a1ba7634f3a9ab387e
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -316,8 +320,13 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/asus/Desktop/C++/Cpp_BigProject/WebDownload.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/asus/Desktop/C++/Cpp_BigProject/WebDownload.pro</value>
+=======
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/github/WebDownload/WebDownload.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/github/WebDownload/WebDownload.pro</value>
+>>>>>>> 10e63602672e659f97b3f0a1ba7634f3a9ab387e
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -328,7 +337,11 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
+<<<<<<< HEAD
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/asus/Desktop/C++/build-WebDownload-Desktop_Qt_5_12_9_MSVC2017_32bit-Debug</value>
+=======
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/github/build-WebDownload-Desktop_Qt_5_14_2_MSVC2017_32bit-Debug</value>
+>>>>>>> 10e63602672e659f97b3f0a1ba7634f3a9ab387e
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

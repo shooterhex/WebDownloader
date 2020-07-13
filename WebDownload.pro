@@ -33,6 +33,7 @@ HEADERS += \
     App/App.h \
     common/cslbase.h \
     common/curl/curl.h \
+    common/def.h \
     model/model.h \
     viewModel/viewModel.h \
     window/mainWindow.h
