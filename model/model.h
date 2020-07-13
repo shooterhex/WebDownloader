@@ -41,7 +41,7 @@ public:
                     //函数正常执行,返回true
     bool setUrl(const std::string& str);//设置_url
     bool setDir(const std::string& str);//设置_Dir
-
+    static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 private:
     std::shared_ptr<std::string> _htmltxt;

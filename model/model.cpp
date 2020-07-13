@@ -41,7 +41,7 @@ bool Model::downLoad()
     curl_handle = curl_easy_init();
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, (*_url).c_str());
-    //curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&mem);
     
     res = curl_easy_perform(curl_handle);
@@ -49,7 +49,7 @@ bool Model::downLoad()
     if(res != CURLE_OK)
         cout << "curl_easy_perform() failed: " << curl_easy_strerror(res) << endl;
     else
-        //cout << (unsigned long)chunk.size <<" bytes retrieved\n";
+        cout << (unsigned long)mem.size <<" bytes retrieved\n";
     
     curl_easy_cleanup(curl_handle);
     
@@ -66,7 +66,7 @@ bool Model::downLoad()
 };
 
 
-static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+size_t Model::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
   size_t realsize = size * nmemb;
   MemoryStruct* mem = (MemoryStruct*)userp;
