@@ -41,12 +41,13 @@ public:
                     //函数正常执行,返回true
     bool setUrl(const std::string& str);//设置_url
     bool setDir(const std::string& str);//设置_Dir
-
+    bool setType(const std::int& type);//待实现
 
 private:
     std::shared_ptr<std::string> _htmltxt;
     std::shared_ptr<std::string> _dir;
     std::shared_ptr<std::string> _url;
+    int type;
     MemoryStruct mem;
 };
 

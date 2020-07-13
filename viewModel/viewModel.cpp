@@ -23,6 +23,7 @@ std::shared_ptr<std::string> ViewModel::get_Url() noexcept
 {
     return m_spModel->get_Url();
 };
+
 PropertyNotification ViewModel::get_notification()
 {
     return [this](uint32_t uID)
@@ -51,5 +52,13 @@ CommandFunc ViewModel::get_SetUrlCommand()
     return [this](std::any&& param)->bool
     {
         return this->m_spModel->setUrl(std::any_cast<std::string>(param));
+    };
+};
+CommandFunc ViewModel::get_SetTypeCommand()
+{
+    return [this](std::any&& param)->bool
+    {
+        //return this->m_spModel->setType();
+        return true;
     };
 };
