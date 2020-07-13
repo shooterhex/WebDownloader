@@ -50,7 +50,7 @@ unix {
     LIBS += -lcurl
 }
 else {
-    LIBS+= -L"D:\tool\curl-7.71.1\lib\curl-7.71.1\x86 Release\lib" -llibcurl_a
+    LIBS+= -L"D:\SHPF\curl-7.71.1\x86 Debug\lib" -llibcurl_a_debug
     FORMS += \
         mainWindow.ui
     #DEFINES+=CURL_STATICLIB
