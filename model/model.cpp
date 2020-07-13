@@ -25,17 +25,23 @@ std::shared_ptr<std::string> Model::get_Htmltxt()
 //此处只是为了便于编译通过
 bool Model::downLoad()
 {
-
-    QMessageBox::information(nullptr,"download","begin");//测试用
     //无法保证url和dir合法，先进行简单检查
-    if(*_url==""||*_dir=="")
+    if(_url->empty())
     {
+        QMessageBox::information(nullptr,"Error","The URL is invalid!");
         return false;
-    };
+    }
+    else if(_dir->empty())
+    {
+        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
+        return false;
+    }
+    QMessageBox::information(nullptr,"download","begin");//测试用
 
     CURL *curl_handle;
     CURLcode res;
     MemoryStruct mem;
+    string message;
 
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -49,29 +55,28 @@ bool Model::downLoad()
 
     if(res == CURLE_OK)
     {
-        ofstream out("test.html");
+        ofstream out(*_dir);
         out << mem.memory;
+        message = to_string(mem.size);
+        message += " bytes retrieved.\n";
     }
-    /*
-     * 这里应换成弹窗提示
-    if(res != CURLE_OK)
-        cout << "curl_easy_perform() failed: " << curl_easy_strerror(res) << endl;
     else
-        cout << (unsigned long)mem.size <<" bytes retrieved\n";
-    */
+    {
+        message = curl_easy_strerror(res);
+        message = "curl_easy_perform() failed: " + message + ".\n";
+    }
 
     curl_easy_cleanup(curl_handle);
     curl_global_cleanup();
-    delete[] mem.memory;
     //最好另开线程进行下载，否则下载时间太长时，整个程序会因等待下载而失去响应
     //不过第一轮迭代不要求这一点，之后再添加
     //此处不进行实际保存，存到变量_htmltxt中即可
 
-
-
-    //最后弹出消息窗作为测试
-    QMessageBox::information(nullptr,"download","succeed");
-    return true;
+    QMessageBox::information(nullptr,"Download Status", message.c_str());
+    if(res == CURLE_OK)
+        return true;
+    else
+        return false;
 };
 
 
@@ -79,11 +84,8 @@ size_t Model::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 {
   size_t realsize = size * nmemb;
   MemoryStruct* memp = (MemoryStruct*)userp;
-  char* ptr = new char[memp->size + realsize + 1];
 
-  memcpy(ptr, memp->memory, memp->size);
-  delete[] memp->memory;
-  memp->memory = ptr;
+  memp->memory.resize(memp->size + realsize + 1);
   memcpy(&memp->memory[memp->size], contents, realsize);
   memp->size += realsize;
   memp->memory[memp->size] = 0;

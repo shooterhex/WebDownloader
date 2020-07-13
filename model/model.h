@@ -20,9 +20,9 @@
 
 class MemoryStruct {
 public:
-  char* memory;
+  std::string memory;
   size_t size;
-  MemoryStruct() { memory = nullptr; size = 0; }
+  MemoryStruct() { memory = ""; size = 0; }
 };
 
 class Model:public PropertyTrigger
