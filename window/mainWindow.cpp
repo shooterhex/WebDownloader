@@ -4,6 +4,10 @@
 #include<QMessageBox>
 #include"../common/def.h"
 
+void testGitPush() {
+    //...
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
