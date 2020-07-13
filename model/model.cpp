@@ -23,6 +23,7 @@ std::shared_ptr<std::string> Model::get_Htmltxt()
 };
 //下面实3个空函数，需要填充实际运行代码
 //此处只是为了便于编译通过
+//【by：田文杰】如果后续需要修改返回值类型，修改后的类型必须可以转换成bool
 bool Model::downLoad()
 {
     //无法保证url和dir合法，先进行简单检查
