@@ -2,6 +2,7 @@
 #include"../common/cslbase.h"
 #include <QMessageBox>
 #include <string>
+#include <fstream>
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
@@ -41,7 +42,7 @@ public:
                     //函数正常执行,返回true
     bool setUrl(const std::string& str);//设置_url
     bool setDir(const std::string& str);//设置_Dir
-    bool setType(const std::int& type);//待实现
+    bool setType(const int& type);//待实现
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 private:
@@ -49,7 +50,6 @@ private:
     std::shared_ptr<std::string> _dir;
     std::shared_ptr<std::string> _url;
     int type;
-    MemoryStruct mem;
 };
 
 

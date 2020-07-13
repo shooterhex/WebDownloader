@@ -35,25 +35,34 @@ bool Model::downLoad()
 
     CURL *curl_handle;
     CURLcode res;
-    
+    MemoryStruct mem;
+
     curl_global_init(CURL_GLOBAL_ALL);
-    
+
     curl_handle = curl_easy_init();
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, (*_url).c_str());
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&mem);
-    
+
     res = curl_easy_perform(curl_handle);
-    
+
+    if(res == CURLE_OK)
+    {
+        ofstream out("test.html");
+        out << mem.memory;
+    }
+    /*
+     * 这里应换成弹窗提示
     if(res != CURLE_OK)
         cout << "curl_easy_perform() failed: " << curl_easy_strerror(res) << endl;
     else
         cout << (unsigned long)mem.size <<" bytes retrieved\n";
-    
+    */
+
     curl_easy_cleanup(curl_handle);
-    
     curl_global_cleanup();
+    delete[] mem.memory;
     //最好另开线程进行下载，否则下载时间太长时，整个程序会因等待下载而失去响应
     //不过第一轮迭代不要求这一点，之后再添加
     //此处不进行实际保存，存到变量_htmltxt中即可
@@ -69,13 +78,16 @@ bool Model::downLoad()
 size_t Model::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
   size_t realsize = size * nmemb;
-  MemoryStruct* mem = (MemoryStruct*)userp;
-  delete[] mem->memory;
-  mem->memory = new char[mem->size + realsize + 1];
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
- 
+  MemoryStruct* memp = (MemoryStruct*)userp;
+  char* ptr = new char[memp->size + realsize + 1];
+
+  memcpy(ptr, memp->memory, memp->size);
+  delete[] memp->memory;
+  memp->memory = ptr;
+  memcpy(&memp->memory[memp->size], contents, realsize);
+  memp->size += realsize;
+  memp->memory[memp->size] = 0;
+
   return realsize;
 }
 
