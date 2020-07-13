@@ -58,7 +58,6 @@ CommandFunc ViewModel::get_SetTypeCommand()
 {
     return [this](std::any&& param)->bool
     {
-        //return this->m_spModel->setType();
-        return true;
+        return this->m_spModel->setType(std::any_cast<int>(param));
     };
 };

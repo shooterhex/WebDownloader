@@ -89,3 +89,8 @@ bool Model::setDir(const std::string& str)
     *_dir=str;
     return true;
 };
+bool Model::setType(const int &type)
+{
+    this->type=type;
+    return true;
+};
