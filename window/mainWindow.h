@@ -25,6 +25,9 @@ private slots:
         void OnBtnDownload();
         void OnBtnChooseDir();
 
+        void OnNewTaskButtonPressed();
+        void OnTaskListButtonPressed();
+
     private:
         Ui::MainWindow *ui;
         std::shared_ptr<CommandFunc> _downloadCommand;
