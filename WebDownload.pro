@@ -33,6 +33,7 @@ HEADERS += \
     App/App.h \
     common/cslbase.h \
     common/curl/curl.h \
+    common/def.h \
     model/model.h \
     viewModel/viewModel.h \
     window/mainWindow.h
@@ -50,7 +51,8 @@ unix {
     LIBS += -lcurl
 }
 else {
-    LIBS+= -L"D:\tool\curl-7.71.1\lib\curl-7.71.1\x86 Release\lib" -llibcurl_a
+#    LIBS+= -L"D:\tool\curl-7.71.1\lib\curl-7.71.1\x86 Release\lib" -llibcurl_a
+    LIBS+= -L"$$PWD/common/curl/x86 Release\lib" -llibcurl_a
     FORMS += \
         mainWindow.ui
     #DEFINES+=CURL_STATICLIB
