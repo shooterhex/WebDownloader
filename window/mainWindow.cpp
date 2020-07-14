@@ -91,6 +91,10 @@ void MainWindow::OnBtnChooseDir()
 
 void MainWindow::OnNewTaskButtonPressed()
 {
+    if (ui->newTaskPushButton->isFlat()) {
+        return;
+    }
+
     ui->newTaskPushButton->setFlat(true);
     ui->taskListPushButton->setFlat(false);
     ui->newTaskPageWidget->show();
@@ -99,6 +103,10 @@ void MainWindow::OnNewTaskButtonPressed()
 
 void MainWindow::OnTaskListButtonPressed()
 {
+    if (ui->taskListPushButton->isFlat()) {
+        return;
+    }
+
     ui->taskListPushButton->setFlat(true);
     ui->newTaskPushButton->setFlat(false);
     ui->taskListPageWidget->show();
@@ -117,6 +125,8 @@ void MainWindow::updateTaskList()
 
     auto* table = ui->taskListTableWidget;
     table->clearContents();
+    table->setRowCount(0);
+
     for (const WebTask& task: *queue) {
         int k = table->rowCount();
         table->insertRow(k);
