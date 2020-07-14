@@ -70,12 +70,18 @@ bool Model::downLoad()
     res = curl_easy_perform(curl_handle);
 
     if(res == CURLE_OK)
-        txt_proc(mem);
-    /*
-    if(res == CURLE_OK)
     {
         ofstream out(*_dir);
-        out << mem.memory;
+        switch(type) {
+        case TYPE_HTML:
+            out << mem.memory;
+            break;
+        case TYPE_TEXT:
+            out << txt_proc(mem);
+            break;
+        case TYPE_PHOTO:
+            break;
+        }
         message = to_string(mem.size);
         message += " bytes retrieved.\n";
     }
@@ -84,7 +90,6 @@ bool Model::downLoad()
         message = curl_easy_strerror(res);
         message = "curl_easy_perform() failed: " + message + ".\n";
     }
-    */
 
     curl_easy_cleanup(curl_handle);
     curl_global_cleanup();
@@ -113,7 +118,7 @@ size_t Model::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
   return realsize;
 }
 
-void Model::txt_proc(MemoryStruct& mem)
+string Model::txt_proc(MemoryStruct& mem)
 {
     vector<tag_node>tags;
     tag_node curnode;
@@ -531,18 +536,6 @@ void Model::txt_proc(MemoryStruct& mem)
             push_heap(tags.begin(), tags.end(), ::greater{});
             break;
         }
-        /*
-        if(tags[1].txt_end == -1)
-            break;
-        txt_start = mem.memory.rfind('>', txt_end) + 1;
-        if(txt_start == txt_end || mem.memory[txt_start] == '\n')
-        {
-            mem.memory = mem.memory.substr(txt_end + 4);
-            continue;
-        }
-        res += mem.memory.substr(txt_start, txt_end - txt_start) + "\n";
-        mem.memory = mem.memory.substr(txt_end + 4);
-        */
     }
-    cout << res.c_str();
+    return res;
 }

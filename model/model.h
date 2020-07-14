@@ -1,7 +1,7 @@
 #pragma once
 #include"../common/cslbase.h"
+#include"../common/def.h"
 #include <QMessageBox>
-#include <iostream>
 #include <string>
 #include <fstream>
 #include <cstdlib>
@@ -75,7 +75,7 @@ public:
     bool setDir(const std::string& str);//设置_Dir
     bool setType(const int& type);//待实现
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
-    void txt_proc(MemoryStruct& mem);
+    std::string txt_proc(MemoryStruct& mem);
 
 private:
     std::shared_ptr<std::string> _htmltxt;
