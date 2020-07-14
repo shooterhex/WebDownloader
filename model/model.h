@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include <cstdio>
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
@@ -76,6 +77,8 @@ public:
     bool setType(const int& type);//待实现
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
     std::string txt_proc(MemoryStruct& mem);
+    bool image_proc(MemoryStruct& mem);
+    bool image_download(std::string& img_url, std::string path);
 
 private:
     std::shared_ptr<std::string> _htmltxt;
