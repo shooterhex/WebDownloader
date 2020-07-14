@@ -1,4 +1,5 @@
 #pragma once
+
 #include"../common/cslbase.h"
 #include"../common/def.h"
 #include <QMessageBox>

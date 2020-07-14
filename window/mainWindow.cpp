@@ -4,10 +4,6 @@
 #include<QMessageBox>
 #include"../common/def.h"
 
-void testGitPush() {
-    //...
-}
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -100,4 +96,27 @@ void MainWindow::OnTaskListButtonPressed()
     ui->newTaskPushButton->setFlat(false);
     ui->taskListPageWidget->show();
     ui->newTaskPageWidget->hide();
+
+    updateTaskList();
+}
+
+void MainWindow::updateTaskList()
+{
+    auto queue = m_viewModel->get_TaskList();
+    if (! queue) {
+        QMessageBox::critical(this, "Error", "Failed to load task queue!");
+        return;
+    }
+
+    auto* table = ui->taskListTableWidget;
+    table->clearContents();
+    for (const WebTask& task: *queue) {
+        int k = table->rowCount();
+        table->insertRow(k);
+
+        table->setItem(k, 0, new QTableWidgetItem(QString::number(task.id)));
+        table->setItem(k, 1, new QTableWidgetItem(QString::fromStdString(task.url)));
+        table->setItem(k, 2, new QTableWidgetItem(QString::fromStdString(task.dir)));
+        table->setItem(k, 3, new QTableWidgetItem(QString::fromStdString(fileTypeIdToString(task.type))));
+    }
 }

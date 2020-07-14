@@ -1,3 +1,5 @@
+#pragma once
+
 #include<QMainWindow>
 #include<viewModel/viewModel.h>
 #include"../common/cslbase.h"
@@ -36,4 +38,6 @@ private slots:
 
         CommandFunc m_cmdFunc_Download;
         ViewModel* m_viewModel;
+
+        void updateTaskList();
 };
