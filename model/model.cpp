@@ -38,6 +38,9 @@ bool Model::setType(const int &type) {
 //下面实3个空函数，需要填充实际运行代码
 //此处只是为了便于编译通过
 //【by：田文杰】如果后续需要修改返回值类型，修改后的类型必须可以转换成bool
+
+//【by:李智】下载的线程要求：1，外界能够查询是否正在下载 IsDownloading()
+//                          2，download结束后，触发消息 Fire(TASK_SINGLE_FINISHED)
 bool Model::downLoad()
 {
     //无法保证url和dir合法，先进行简单检查
