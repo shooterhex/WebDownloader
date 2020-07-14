@@ -232,7 +232,7 @@ void Model::txt_proc(MemoryStruct& mem)
             break;
         case title_eq:
             curnode.txt_start = curnode.txt_end + 7;
-            curnode.txt_end = mem.memory.find('\"');
+            curnode.txt_end = mem.memory.find('\"', curnode.txt_start);
             if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
             {
                 mem.memory = mem.memory.substr(curnode.txt_end + 1);
