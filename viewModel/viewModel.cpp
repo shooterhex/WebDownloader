@@ -66,6 +66,11 @@ CommandFunc ViewModel::get_DownloadCommand()
 {
     return [this](std::any&& param)->bool
     {
+        auto t=std::any_cast<WebTask>(param);
+        _taskList->push_back(t);
+        if(m_spModel->IsDownloading()){
+            return true;
+        }
         return this->m_spModel->downLoad();
     };
 };

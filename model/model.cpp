@@ -538,4 +538,8 @@ string Model::txt_proc(MemoryStruct& mem)
         }
     }
     return res;
+};
+bool Model::IsDownloading()
+{
+    return false;
 }
