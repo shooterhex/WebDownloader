@@ -46,6 +46,20 @@ PropertyNotification ViewModel::get_notification()
                 if( uID == TASK_LIST_CHANGED ) {
                     this->Fire(uID);
                 }
+                else if(uID == TASK_SINGLE_FINISHED)
+                {
+                    //任务完成时，检查是否有待下载任务
+                    if(!_taskList->empty())
+                    {
+                        auto t=_taskList->front();
+                        this->m_spModel->setDir(t.dir);
+                        this->m_spModel->setUrl(t.url);
+                        this->m_spModel->setType(t.type);
+                        this->m_spModel->downLoad();
+                        _taskList->pop_front();
+                        this->Fire(TASK_LIST_CHANGED);
+                    }
+                }
             };
 };
 CommandFunc ViewModel::get_DownloadCommand()
