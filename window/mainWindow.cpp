@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     OnNewTaskButtonPressed();
 
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(OnBtnDownload()));
+    connect(ui->chooseFilePushButton, SIGNAL(clicked()), this, SLOT(OnBtnChooseFile()));
     connect(ui->chooseDirPushButton, SIGNAL(clicked()), this, SLOT(OnBtnChooseDir()));
 
     connect(ui->newTaskPushButton, SIGNAL(clicked()), this, SLOT(OnNewTaskButtonPressed()));
@@ -76,9 +77,15 @@ void MainWindow::OnBtnDownload()
     }
 }
 
+void MainWindow::OnBtnChooseFile()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Select destination file path");
+    ui->dirTextEdit->setText(fileName);
+}
+
 void MainWindow::OnBtnChooseDir()
 {
-    QString dirName = QFileDialog::getSaveFileName(this, "Select destination directory");
+    QString dirName = QFileDialog::getExistingDirectory(this, "Select destination directory");
     ui->dirTextEdit->setText(dirName);
 }
 
