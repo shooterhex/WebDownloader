@@ -1,8 +1,10 @@
 #pragma once
 #include"../common/cslbase.h"
 #include <QMessageBox>
+#include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdlib>
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
@@ -17,6 +19,35 @@
 //Linux环境下，直接从软件包管理器安装curl静态库
 #include <curl/curl.h>
 #endif
+
+typedef enum {
+    title_sytax,
+    aherf,
+    title_eq,
+    span,
+    p_syntax,
+    br_syntax,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6
+} txt_tag;
+
+class tag_node {
+public:
+    int txt_start, txt_end;
+    txt_tag tag_type;
+};
+
+struct greater
+{
+    bool operator()(const tag_node& a, const tag_node& b)
+    {
+        return a.txt_end > b.txt_end;
+    }
+};
 
 class MemoryStruct {
 public:
@@ -44,12 +75,14 @@ public:
     bool setDir(const std::string& str);//设置_Dir
     bool setType(const int& type);//待实现
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
+    void txt_proc(MemoryStruct& mem);
 
 private:
     std::shared_ptr<std::string> _htmltxt;
     std::shared_ptr<std::string> _dir;
     std::shared_ptr<std::string> _url;
     int type;
+    std::stringstream txt_ss;
 };
 
 

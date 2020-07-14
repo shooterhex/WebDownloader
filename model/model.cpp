@@ -9,18 +9,32 @@ Model::Model()
 
 };
 
-std::shared_ptr<std::string> Model::get_Url()
-{
+std::shared_ptr<std::string> Model::get_Url() {
     return this->_url;
-};
-std::shared_ptr<std::string> Model::get_Dir()
-{
+}
+
+std::shared_ptr<std::string> Model::get_Dir() {
     return this->_dir;
-};
-std::shared_ptr<std::string> Model::get_Htmltxt()
-{
+}
+
+std::shared_ptr<std::string> Model::get_Htmltxt() {
     return this->_htmltxt;
-};
+}
+
+bool Model::setUrl(const std::string& str) {
+    *_url=str;
+    return true;
+}
+
+bool Model::setDir(const std::string& str) {
+    *_dir=str;
+    return true;
+}
+
+bool Model::setType(const int &type) {
+    this->type=type;
+    return true;
+}
 //下面实3个空函数，需要填充实际运行代码
 //此处只是为了便于编译通过
 //【by：田文杰】如果后续需要修改返回值类型，修改后的类型必须可以转换成bool
@@ -49,11 +63,15 @@ bool Model::downLoad()
     curl_handle = curl_easy_init();
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, (*_url).c_str());
+    curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&mem);
 
     res = curl_easy_perform(curl_handle);
 
+    if(res == CURLE_OK)
+        txt_proc(mem);
+    /*
     if(res == CURLE_OK)
     {
         ofstream out(*_dir);
@@ -66,6 +84,7 @@ bool Model::downLoad()
         message = curl_easy_strerror(res);
         message = "curl_easy_perform() failed: " + message + ".\n";
     }
+    */
 
     curl_easy_cleanup(curl_handle);
     curl_global_cleanup();
@@ -94,18 +113,437 @@ size_t Model::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
   return realsize;
 }
 
-bool Model::setUrl(const std::string& str)
+void Model::txt_proc(MemoryStruct& mem)
 {
-    *_url=str;
-    return true;
-};
-bool Model::setDir(const std::string& str)
-{
-    *_dir=str;
-    return true;
-};
-bool Model::setType(const int &type)
-{
-    this->type=type;
-    return true;
-};
+    vector<tag_node>tags;
+    tag_node curnode;
+    string res;
+
+    txt_ss << mem.memory;
+    curnode.txt_start = mem.memory.find("title>");
+    curnode.txt_start += 6;
+    mem.memory = mem.memory.substr(curnode.txt_start);
+    curnode.txt_end = mem.memory.find("</");
+    res += mem.memory.substr(0, curnode.txt_end) + "\n\n";
+    //Min Heap + Switch + Enum
+    //Insert first
+    curnode.txt_end = mem.memory.find("</a>"); // aherf
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = aherf;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("title=\""); // title_eq !!This is the only forward find
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = title_eq;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</span>"); // span
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = span;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</p>"); // p_syntax
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = p_syntax;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("<br />"); // br_syntax
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = br_syntax;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</h1>"); // h1
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = h1;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</h2>"); // h2
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = h2;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</h3>"); // h3
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = h3;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</h4>"); // h4
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = h4;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</h5>"); // h5
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = h5;
+        tags.push_back(curnode);
+    }
+    curnode.txt_end = mem.memory.find("</h6>"); // h6
+    if(curnode.txt_end != -1)
+    {
+        curnode.tag_type = h6;
+        tags.push_back(curnode);
+    }
+    make_heap(tags.begin(), tags.end(), ::greater{});
+    while(!tags.empty())
+    {
+        pop_heap(tags.begin(), tags.end(), ::greater{});
+        curnode = tags.back();
+        tags.pop_back();
+        
+        switch (curnode.tag_type) {
+        case aherf:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 4);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 4;
+
+                curnode.txt_end = mem.memory.find("</a>"); // aherf
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = aherf;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 4);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 4;
+
+            curnode.txt_end = mem.memory.find("</a>"); // aherf
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = aherf;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case title_eq:
+            curnode.txt_start = curnode.txt_end + 7;
+            curnode.txt_end = mem.memory.find('\"');
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 1);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 1;
+
+                curnode.txt_end = mem.memory.find("title=\""); // title_eq !!This is the only forward find
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = title_eq;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 1);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 1;
+
+            curnode.txt_end = mem.memory.find("title=\""); // title_eq !!This is the only forward find
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = title_eq;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case span:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 7);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 7;
+
+                curnode.txt_end = mem.memory.find("</span>"); // span
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = span;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 7);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 7;
+            
+            curnode.txt_end = mem.memory.find("</span>"); // span
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = span;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case p_syntax:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 4);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 4;
+
+                curnode.txt_end = mem.memory.find("</p>"); // p_syntax
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = p_syntax;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 4);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 4;
+
+            curnode.txt_end = mem.memory.find("</p>"); // p_syntax
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = p_syntax;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case br_syntax:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 6);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 6;
+                
+                curnode.txt_end = mem.memory.find("<br />"); // br_syntax
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = br_syntax;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 6);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 6;
+
+            curnode.txt_end = mem.memory.find("<br />"); // br_syntax
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = br_syntax;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case h1:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 5);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 5;
+                curnode.txt_end = mem.memory.find("</h1>"); // h1
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = h1;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 5);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 5;
+
+            curnode.txt_end = mem.memory.find("</h1>"); // h1
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = h1;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case h2:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 5);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 5;
+                
+                curnode.txt_end = mem.memory.find("</h2>"); // h2
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = h2;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 5);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 5;
+
+            curnode.txt_end = mem.memory.find("</h2>"); // h2
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = h2;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case h3:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 5);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 5;
+                
+                curnode.txt_end = mem.memory.find("</h3>"); // h3
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = h3;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 5);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 5;
+            
+            curnode.txt_end = mem.memory.find("</h3>"); // h3
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = h3;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case h4:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 5);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 5;
+
+                curnode.txt_end = mem.memory.find("</h4>"); // h4
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = h4;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 5);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 5;
+
+            curnode.txt_end = mem.memory.find("</h4>"); // h4
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = h4;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case h5:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 5);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 5;
+
+                curnode.txt_end = mem.memory.find("</h5>"); // h5
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = h5;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 5);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 5;
+
+            curnode.txt_end = mem.memory.find("</h5>"); // h5
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = h5;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        case h6:
+            curnode.txt_start = mem.memory.rfind('>', curnode.txt_end) + 1;
+            if(curnode.txt_start == curnode.txt_end || mem.memory[curnode.txt_start] == '\n')
+            {
+                mem.memory = mem.memory.substr(curnode.txt_end + 5);
+                for(auto& i : tags)
+                    i.txt_end -= curnode.txt_end + 5;
+                
+                curnode.txt_end = mem.memory.find("</h6>"); // h6
+                if(curnode.txt_end != -1)
+                {
+                    curnode.tag_type = h6;
+                    tags.push_back(curnode);
+                }
+                push_heap(tags.begin(), tags.end(), ::greater{});
+                continue;
+            }
+            res += mem.memory.substr(curnode.txt_start, curnode.txt_end - curnode.txt_start) + "\n";
+            mem.memory = mem.memory.substr(curnode.txt_end + 5);
+            for(auto& i : tags)
+                i.txt_end -= curnode.txt_end + 5;
+                
+            curnode.txt_end = mem.memory.find("</h6>"); // h6
+            if(curnode.txt_end != -1)
+            {
+                curnode.tag_type = h6;
+                tags.push_back(curnode);
+            }
+            push_heap(tags.begin(), tags.end(), ::greater{});
+            break;
+        }
+        /*
+        if(tags[1].txt_end == -1)
+            break;
+        txt_start = mem.memory.rfind('>', txt_end) + 1;
+        if(txt_start == txt_end || mem.memory[txt_start] == '\n')
+        {
+            mem.memory = mem.memory.substr(txt_end + 4);
+            continue;
+        }
+        res += mem.memory.substr(txt_start, txt_end - txt_start) + "\n";
+        mem.memory = mem.memory.substr(txt_end + 4);
+        */
+    }
+    cout << res.c_str();
+}
