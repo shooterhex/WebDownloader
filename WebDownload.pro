@@ -56,5 +56,6 @@ else {
     LIBS += -L"D:\tool\curl-7.71.1\lib\curl-7.71.1\x86 Release\lib" -llibcurl_a
     #DEFINES+=CURL_STATICLIB
     DEFINES += BUILDING_LIBCURL \
-        HTTP_ONLY
+        HTTP_ONLY \
+        WINDOWS
 }

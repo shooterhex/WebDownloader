@@ -1,8 +1,10 @@
 #pragma once
 
 #include"../common/cslbase.h"
+#include"../common/def.h"
 #include"../model/model.h"
 #include<memory>
+#include<QQueue>
 class ViewModel:public PropertyTrigger
 {
 public:
@@ -14,6 +16,11 @@ public:
     std::shared_ptr<std::string> get_Url() noexcept;
     std::shared_ptr<std::string> get_Dir() noexcept;
 
+    //该属性将提供给window
+    //考虑将任务列表属性放在viewModel层维护
+    //目前先在构造函数中对tasklist赋值测试
+    std::shared_ptr<QQueue<WebTask>> get_TaskList() noexcept;
+
 //commands
     CommandFunc get_SetUrlCommand();
     CommandFunc get_SetDirCommand();
@@ -24,7 +31,8 @@ public:
 
     PropertyNotification get_notification();
 private:
-
+    //任务列表
+    std::shared_ptr<QQueue<WebTask>> _taskList;
 
 private:
     std::shared_ptr<Model>  m_spModel;
