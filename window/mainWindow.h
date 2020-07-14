@@ -25,6 +25,7 @@ class MainWindow:public QMainWindow
         void setViewModel(ViewModel* viewModel);
 private slots:
         void OnBtnDownload();
+        void OnBtnChooseFile();
         void OnBtnChooseDir();
 
         void OnNewTaskButtonPressed();
