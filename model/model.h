@@ -82,7 +82,6 @@ private:
     std::shared_ptr<std::string> _dir;
     std::shared_ptr<std::string> _url;
     int type;
-    std::stringstream txt_ss;
 };
 
 

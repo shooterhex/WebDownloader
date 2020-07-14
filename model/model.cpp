@@ -119,7 +119,6 @@ void Model::txt_proc(MemoryStruct& mem)
     tag_node curnode;
     string res;
 
-    txt_ss << mem.memory;
     curnode.txt_start = mem.memory.find("title>");
     curnode.txt_start += 6;
     mem.memory = mem.memory.substr(curnode.txt_start);
