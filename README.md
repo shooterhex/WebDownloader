@@ -1,4 +1,4 @@
-# WedDownload
+# WebDownload
 
 ## 项目描述 ##
 webDownload项目主要用于方便快捷的下载网页中的html源文件，文本内容和图片。
@@ -11,7 +11,7 @@ webDownload项目主要用于方便快捷的下载网页中的html源文件，�
 选题：简单web内容下载
 ### 项目管理 ###
 
-版本控制：git, github
+版本控制：git, gitee
 
 开发环境：QT 5.14.2
 
