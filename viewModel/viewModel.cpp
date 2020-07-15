@@ -48,7 +48,10 @@ PropertyNotification ViewModel::get_notification()
                 }
                 else if(uID == TASK_SINGLE_FINISHED)
                 {
-                    //任务完成时，检查是否有待下载任务
+                    //任务完成时，删除第一项任务
+                    _taskList->pop_front();
+
+                    //检查是否有待下载任务
                     if(!_taskList->empty())
                     {
                         auto t=_taskList->front();
@@ -56,9 +59,9 @@ PropertyNotification ViewModel::get_notification()
                         this->m_spModel->setUrl(t.url);
                         this->m_spModel->setType(t.type);
                         this->m_spModel->downLoad();
-                        _taskList->pop_front();
-                        this->Fire(TASK_LIST_CHANGED);
-                    }
+
+                    };
+                    this->Fire(TASK_LIST_CHANGED);
                 }
             };
 };
@@ -66,7 +69,8 @@ CommandFunc ViewModel::get_DownloadCommand()
 {
     return [this](std::any&& param)->bool
     {
-        auto t=std::any_cast<WebTask>(param);
+        //此处auto可能有问题
+        WebTask t=std::any_cast<WebTask>(param);
         _taskList->push_back(t);
         if(m_spModel->IsDownloading()){
             return true;
