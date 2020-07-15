@@ -57,6 +57,7 @@ PropertyNotification ViewModel::get_notification()
                 }
             };
 };
+
 CommandFunc ViewModel::get_DownloadCommand()
 {
     static int cnt;

@@ -10,14 +10,28 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    OnNewTaskButtonPressed();
+    //Load "new task" page by default
+    onNewTaskActionTriggered();
 
-    connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(OnBtnDownload()));
-    connect(ui->chooseFilePushButton, SIGNAL(clicked()), this, SLOT(OnBtnChooseFile()));
-    connect(ui->chooseDirPushButton, SIGNAL(clicked()), this, SLOT(OnBtnChooseDir()));
+    //Connect buttons with corresponding slots
+    connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(onDownloadButtonPressed()));
+    connect(ui->chooseFilePushButton, SIGNAL(clicked()), this, SLOT(onChooseFileButtonPressed()));
+    connect(ui->chooseDirPushButton, SIGNAL(clicked()), this, SLOT(onChooseDirButtonPressed()));
+    connect(ui->refreshTaskListPushButton, SIGNAL(clicked()), this, SLOT(onRefreshTaskListButtonPressed()));
 
-    connect(ui->newTaskPushButton, SIGNAL(clicked()), this, SLOT(OnNewTaskButtonPressed()));
-    connect(ui->taskListPushButton, SIGNAL(clicked()), this, SLOT(OnTaskListButtonPressed()));
+    //Connect menubar actions with corresponding slots
+    connect(ui->newTaskAction, SIGNAL(triggered()), this, SLOT(onNewTaskActionTriggered()));
+    connect(ui->quitAction, SIGNAL(triggered()), this, SLOT(onQuitActionTriggered()));
+    connect(ui->taskListAction, SIGNAL(triggered()), this, SLOT(onTaskListActionTriggered()));
+    connect(ui->aboutAction, SIGNAL(triggered()), this, SLOT(onAboutActionTriggered()));
+
+    //Attack QLabel object to status bar
+    m_statusBarLabel = new QLabel();
+    ui->statusBar->addWidget(m_statusBarLabel);
+
+    //Initialize status bar with nTasks = 0
+    m_nTasks = 0;
+    updateStatusBar();
 }
 
 MainWindow::~MainWindow()
@@ -45,14 +59,14 @@ void MainWindow::setViewModel(ViewModel* viewModel)
     m_viewModel = viewModel;
 }
 
-void MainWindow::OnBtnDownload()
+void MainWindow::onDownloadButtonPressed()
 {
     set_DownloadCommand(m_viewModel->get_DownloadCommand());
 
     std::string dir = ui->dirTextEdit->toPlainText().toStdString();
-    m_viewModel->get_SetDirCommand()(dir);
+//    m_viewModel->get_SetDirCommand()(dir);
     std::string url = ui->urlTextEdit->toPlainText().toStdString();
-    m_viewModel->get_SetUrlCommand()(url);
+//    m_viewModel->get_SetUrlCommand()(url);
 
     int typeID = -1;
     switch (ui->fileTypeComboBox->currentIndex()) {
@@ -68,50 +82,56 @@ void MainWindow::OnBtnDownload()
     }
     m_viewModel->get_SetTypeCommand()(typeID);
 
-    auto res = m_cmdFunc_Download(std::any(WebTask{0,dir,url,typeID})); //Dummy argument
+    auto res = m_cmdFunc_Download(std::any(WebTask{.id = 0, .url = url, .dir = dir, .type = typeID}));
     if (res) {
-        qDebug()<<"succeed OnBtnDownload\n";
+        m_nTasks += 1;
+        updateStatusBar();
+        qDebug() << "succeed OnBtnDownload\n";
     }
     else {
-        qDebug()<<"failed OnBtnDownload\n";
+        qDebug() << "failed OnBtnDownload\n";
     }
 }
 
-void MainWindow::OnBtnChooseFile()
+void MainWindow::onChooseFileButtonPressed()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Select destination file path");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("选择写入文件的路径"));
     ui->dirTextEdit->setText(fileName);
 }
 
-void MainWindow::OnBtnChooseDir()
+void MainWindow::onChooseDirButtonPressed()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select destination directory");
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("选择写入目录的路径"));
     ui->dirTextEdit->setText(dirName);
 }
 
-void MainWindow::OnNewTaskButtonPressed()
+void MainWindow::onNewTaskActionTriggered()
 {
-    if (ui->newTaskPushButton->isFlat()) {
-        return;
-    }
-
-    ui->newTaskPushButton->setFlat(true);
-    ui->taskListPushButton->setFlat(false);
     ui->newTaskPageWidget->show();
     ui->taskListPageWidget->hide();
 }
 
-void MainWindow::OnTaskListButtonPressed()
+void MainWindow::onQuitActionTriggered()
 {
-    if (ui->taskListPushButton->isFlat()) {
-        return;
-    }
+    exit(0);
+}
 
-    ui->taskListPushButton->setFlat(true);
-    ui->newTaskPushButton->setFlat(false);
+void MainWindow::onTaskListActionTriggered()
+{
     ui->taskListPageWidget->show();
     ui->newTaskPageWidget->hide();
 
+    updateTaskList();
+}
+
+void MainWindow::onAboutActionTriggered()
+{
+    static QString aboutInfo = tr("WebDownload by C++ project group");
+    QMessageBox::information(this, tr("关于"), aboutInfo);
+}
+
+void MainWindow::onRefreshTaskListButtonPressed()
+{
     updateTaskList();
 }
 
@@ -119,9 +139,12 @@ void MainWindow::updateTaskList()
 {
     auto queue = m_viewModel->get_TaskList();
     if (! queue) {
-        QMessageBox::critical(this, "Error", "Failed to load task queue!");
+        QMessageBox::critical(this, tr("错误"), tr("加载任务队列时失败！"));
         return;
     }
+    m_nTasks = queue->size();
+
+    ui->taskListLabel->setText(tr("任务列表：%1项进行中").arg(queue->size()));
 
     auto* table = ui->taskListTableWidget;
     table->clearContents();
@@ -136,4 +159,11 @@ void MainWindow::updateTaskList()
         table->setItem(k, 2, new QTableWidgetItem(QString::fromStdString(task.dir)));
         table->setItem(k, 3, new QTableWidgetItem(QString::fromStdString(fileTypeIdToString(task.type))));
     }
+
+    updateStatusBar();
+}
+
+void MainWindow::updateStatusBar()
+{
+    m_statusBarLabel->setText(tr("总任务数：%1").arg(m_nTasks));
 }
