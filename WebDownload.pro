@@ -53,7 +53,7 @@ unix {
     LIBS += -lcurl
 }
 else {
-    LIBS += -L"D:\SHPF\curl-7.71.1\x86 Release\lib" -llibcurl_a
+    LIBS += -L"$$PWD/common/curl/x86 Release/lib/" -llibcurl_a
     #DEFINES+=CURL_STATICLIB
     DEFINES += BUILDING_LIBCURL \
         HTTP_ONLY \

@@ -4,13 +4,7 @@ ViewModel::ViewModel()
 {
     _taskList=std::make_shared<QQueue<WebTask>>();
 
-    WebTask t[3]={
-        {1,"http://www.baidu.com","d:/t.html",TYPE_HTML},
-        {2,"http://gitee.com","d:/g.html",TYPE_HTML},
-        {3,"","",TYPE_HTML}
-    };
-    _taskList->push_back(t[0]);
-    _taskList->push_back(t[1]);
+
 };
 ViewModel::~ViewModel(){};
 void ViewModel::SetModel(const std::shared_ptr<Model>& spModel)
@@ -35,8 +29,6 @@ std::shared_ptr<QQueue<WebTask>> ViewModel::get_TaskList() noexcept
 {
     return _taskList;
 };
-
-
 
 
 PropertyNotification ViewModel::get_notification()
@@ -67,11 +59,20 @@ PropertyNotification ViewModel::get_notification()
 };
 CommandFunc ViewModel::get_DownloadCommand()
 {
+    static int cnt;
     return [this](std::any&& param)->bool
     {
         //此处auto可能有问题
         WebTask t=std::any_cast<WebTask>(param);
+        t.id=cnt++;
         _taskList->push_back(t);
+
+
+        Fire(TASK_LIST_CHANGED);
+
+        //测试用
+        //在此处截断
+        return true;
         if(m_spModel->IsDownloading()){
             return true;
         }

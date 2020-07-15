@@ -3,7 +3,7 @@
 #include<QFileDialog>
 #include<QMessageBox>
 #include"../common/def.h"
-
+#include<QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -29,7 +29,7 @@ PropertyNotification MainWindow::get_Notification()
 {
     return [this](uint32_t uID)
                 {
-                    if (uID == HTMLTEXT) {
+                    if (uID == TASK_LIST_CHANGED) {
                         this->update();
                     }
                 };
@@ -68,12 +68,12 @@ void MainWindow::OnBtnDownload()
     }
     m_viewModel->get_SetTypeCommand()(typeID);
 
-    auto res = m_cmdFunc_Download(std::any()); //Dummy argument
+    auto res = m_cmdFunc_Download(std::any(WebTask{0,dir,url,typeID})); //Dummy argument
     if (res) {
-        QMessageBox::information(this, "Success", "Succeeded to download.");
+        qDebug()<<"succeed OnBtnDownload\n";
     }
     else {
-        QMessageBox::warning(this, "Error", "Failed to download!");
+        qDebug()<<"failed OnBtnDownload\n";
     }
 }
 
