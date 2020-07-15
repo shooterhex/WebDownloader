@@ -579,7 +579,7 @@ bool Model::image_proc(MemoryStruct& mem)
             start = filesearch.rfind("//", end) + 2;
             img_url = filesearch.substr(start, end - start) + i;
             filesearch = filesearch.substr(end + i.size());
-            if(!image_download(img_url, *_dir + "pic" + to_string(count) + i))
+            if(!image_download(img_url, *_dir + "/pic" + to_string(count) + i))
                 return false;
             count++;
         }
