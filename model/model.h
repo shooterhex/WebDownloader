@@ -2,7 +2,6 @@
 
 #include"../common/cslbase.h"
 #include"../common/def.h"
-#include <QMessageBox>
 #include <string>
 #include <fstream>
 #include <cstdlib>
@@ -10,7 +9,7 @@
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
-#include "../common/curl/curl.h"
+#include "curl/curl.h"
 #define CURL_STATICLIB
 #pragma comment(lib, "Normaliz.lib")
 #pragma comment(lib, "Ws2_32.lib")

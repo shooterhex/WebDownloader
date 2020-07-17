@@ -46,15 +46,15 @@ bool Model::downLoad()
     //无法保证url和dir合法，先进行简单检查
     if(_url->empty())
     {
-        QMessageBox::information(nullptr,"Error","The URL is invalid!");
+//        QMessageBox::information(nullptr,"Error","The URL is invalid!");
         return false;
     }
     else if(_dir->empty())
     {
-        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
+//        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
         return false;
     }
-    QMessageBox::information(nullptr,"download","begin");//测试用
+//    QMessageBox::information(nullptr,"download","begin");//测试用
 
     CURL *curl_handle;
     CURLcode res;
@@ -114,7 +114,7 @@ bool Model::downLoad()
     //不过第一轮迭代不要求这一点，之后再添加
     //此处不进行实际保存，存到变量_htmltxt中即可
 
-    QMessageBox::information(nullptr,"Download Status", message.c_str());
+//    QMessageBox::information(nullptr,"Download Status", message.c_str());
     if(res == CURLE_OK)
         return true;
     else
@@ -608,7 +608,7 @@ bool Model::image_download(string& img_url, string path)
         output_img = fopen(path.c_str(), "wb"); 
         if(output_img == NULL)
         {
-            QMessageBox::information(nullptr,"Error", "File opened failed."); 
+//            QMessageBox::information(nullptr,"Error", "File opened failed.");
             return false;
         }
         curl_easy_setopt(image, CURLOPT_URL, img_url.c_str()); 
@@ -616,8 +616,8 @@ bool Model::image_download(string& img_url, string path)
         curl_easy_setopt(image, CURLOPT_WRITEDATA, output_img); 
 
         imgresult = curl_easy_perform(image); 
-        if(imgresult)
-            QMessageBox::information(nullptr,"Error", "Image download failed.");
+//        if(imgresult)
+//            QMessageBox::information(nullptr,"Error", "Image download failed.");
     }
     curl_easy_cleanup(image);
     fclose(output_img);
