@@ -38,20 +38,23 @@ bool Model::setType(const int &type) {
 //下面实3个空函数，需要填充实际运行代码
 //此处只是为了便于编译通过
 //【by：田文杰】如果后续需要修改返回值类型，修改后的类型必须可以转换成bool
+
+//【by:李智】下载的线程要求：1，外界能够查询是否正在下载 IsDownloading()
+//                          2，download结束后，触发消息 Fire(TASK_SINGLE_FINISHED)
 bool Model::downLoad()
 {
     //无法保证url和dir合法，先进行简单检查
     if(_url->empty())
     {
-        QMessageBox::information(nullptr,"Error","The URL is invalid!");
+//        QMessageBox::information(nullptr,"Error","The URL is invalid!");
         return false;
     }
     else if(_dir->empty())
     {
-        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
+//        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
         return false;
     }
-    QMessageBox::information(nullptr,"download","begin");//测试用
+//    QMessageBox::information(nullptr,"download","begin");//测试用
 
     CURL *curl_handle;
     CURLcode res;
@@ -111,7 +114,7 @@ bool Model::downLoad()
     //不过第一轮迭代不要求这一点，之后再添加
     //此处不进行实际保存，存到变量_htmltxt中即可
 
-    QMessageBox::information(nullptr,"Download Status", message.c_str());
+//    QMessageBox::information(nullptr,"Download Status", message.c_str());
     if(res == CURLE_OK)
         return true;
     else
@@ -552,6 +555,10 @@ string Model::txt_proc(MemoryStruct& mem)
         }
     }
     return res;
+};
+bool Model::IsDownloading()
+{
+    return false;
 }
 
 bool Model::image_proc(MemoryStruct& mem)
@@ -579,7 +586,7 @@ bool Model::image_proc(MemoryStruct& mem)
             start = filesearch.rfind("//", end) + 2;
             img_url = filesearch.substr(start, end - start) + i;
             filesearch = filesearch.substr(end + i.size());
-            if(!image_download(img_url, *_dir + "/pic" + to_string(count) + i))
+            if(!image_download(img_url, *_dir + "\\pic" + to_string(count) + i))
                 return false;
             count++;
         }
@@ -601,7 +608,7 @@ bool Model::image_download(string& img_url, string path)
         output_img = fopen(path.c_str(), "wb"); 
         if(output_img == NULL)
         {
-            QMessageBox::information(nullptr,"Error", "File opened failed."); 
+//            QMessageBox::information(nullptr,"Error", "File opened failed.");
             return false;
         }
         curl_easy_setopt(image, CURLOPT_URL, img_url.c_str()); 
@@ -609,8 +616,8 @@ bool Model::image_download(string& img_url, string path)
         curl_easy_setopt(image, CURLOPT_WRITEDATA, output_img); 
 
         imgresult = curl_easy_perform(image); 
-        if(imgresult)
-            QMessageBox::information(nullptr,"Error", "Image download failed.");
+//        if(imgresult)
+//            QMessageBox::information(nullptr,"Error", "Image download failed.");
     }
     curl_easy_cleanup(image);
     fclose(output_img);

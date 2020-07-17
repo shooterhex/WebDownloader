@@ -32,9 +32,9 @@ CONFIG += c++17
 HEADERS += \
     App/App.h \
     common/cslbase.h \
-    common/curl/curl.h \
     common/def.h \
     model/model.h \
+    model/curl/curl.h \
     viewModel/viewModel.h \
     window/mainWindow.h
 
@@ -53,7 +53,7 @@ unix {
     LIBS += -lcurl
 }
 else {
-    LIBS += -L"D:\SHPF\curl-7.71.1\x86 Release\lib" -llibcurl_a
+    LIBS += -L"$$PWD/model/curl/x86 Release/lib/" -llibcurl_a
     #DEFINES+=CURL_STATICLIB
     DEFINES += BUILDING_LIBCURL \
         HTTP_ONLY \

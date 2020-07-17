@@ -2,7 +2,6 @@
 
 #include"../common/cslbase.h"
 #include"../common/def.h"
-#include <QMessageBox>
 #include <string>
 #include <fstream>
 #include <cstdlib>
@@ -10,7 +9,7 @@
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
-#include "../common/curl/curl.h"
+#include "curl/curl.h"
 #define CURL_STATICLIB
 #pragma comment(lib, "Normaliz.lib")
 #pragma comment(lib, "Ws2_32.lib")
@@ -75,7 +74,11 @@ public:
                     //函数正常执行,返回true
     bool setUrl(const std::string& str);//设置_url
     bool setDir(const std::string& str);//设置_Dir
-    bool setType(const int& type);//待实现
+    bool setType(const int& type);
+
+    bool IsDownloading();//第四轮迭代 待实现，如果正在下载返回true
+                        //任务列表由viewModel层维护
+
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
     std::string txt_proc(MemoryStruct& mem);
     bool image_proc(MemoryStruct& mem);

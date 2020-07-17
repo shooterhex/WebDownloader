@@ -1,4 +1,4 @@
-# WedDownload
+# WebDownload
 
 ## 项目描述 ##
 webDownload项目主要用于方便快捷的下载网页中的html源文件，文本内容和图片。
@@ -11,7 +11,7 @@ webDownload项目主要用于方便快捷的下载网页中的html源文件，�
 选题：简单web内容下载
 ### 项目管理 ###
 
-版本控制：git, github
+版本控制：git, gitee
 
 开发环境：QT 5.14.2
 
@@ -53,6 +53,12 @@ webDownload项目主要用于方便快捷的下载网页中的html源文件，�
 
 框架整体采用MVVM模式，将view层与model层分离，通过view model连接，实现多人协作。
 
+model：底层数据处理，下载保存文件
+
+viewModel: 为上下两层提供交互接口，进行必要的数据形式转换
+
+view(window):提供交互界面
+
 ### 实现过程 ###
 
 第一轮迭代：做出主窗口，实现url，目录的输入，点击按钮，获取html内容，保存到内部变量中
@@ -72,9 +78,7 @@ webDownload项目主要用于方便快捷的下载网页中的html源文件，�
 	model实现下载线程与主线程分开，删除调试用弹窗
 	viewModel维护任务队列，当model中没有任务或结束一个任务时，弹出任务传递给model，同时通知window更新界面
 
-第五轮迭代：增加任务窗口，显示任务列表
-
-第六轮迭代：实现任务排队，多任务下载
+第五轮迭代：细节优化，修复bug
 
 ## 项目分工 ##
 
@@ -83,3 +87,7 @@ View：田文杰
 Model：郑无恙
 
 ViewModel : 李智
+
+## 老师要求 ##
+1. curl可以不放在common 因为它仅仅被model使用；Model包含了QMessageBox.h这个不妥；window层包含了VM的头文件，破坏框架，退回MVC模式了。可以看看多线程异步处理方式 ，在主线程触发属性改变的通知
+2. QMessageBox就是界面，不要放在Model 可以把多线程处理后的信息字符串当作属性暴露出来，异步触发主线程的属性改变通知来做
