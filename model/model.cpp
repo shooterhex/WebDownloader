@@ -59,7 +59,7 @@ bool Model::downLoad()
     CURL *curl_handle;
     CURLcode res;
     MemoryStruct mem;
-    string message;
+    string message, useragent;
     ofstream out;
 
     curl_global_init(CURL_GLOBAL_ALL);
@@ -68,10 +68,13 @@ bool Model::downLoad()
 
     if(curl_handle)
     {
+        useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36";
         curl_easy_setopt(curl_handle, CURLOPT_URL, _url->c_str());
         curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&mem);
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, useragent.c_str());
+
         res = curl_easy_perform(curl_handle);
 
         if(res == CURLE_OK)
@@ -565,6 +568,7 @@ bool Model::image_proc(MemoryStruct& mem)
 {
     //find jpg, png, bmp, gif, jpeg, svg
     int start, end, count;
+    int invalid;
     string img_url, filetype[6];
     string path, filesearch;
     filetype[0]=".jpg";
@@ -584,28 +588,34 @@ bool Model::image_proc(MemoryStruct& mem)
             if(end == -1)
                 break;
             start = filesearch.rfind("//", end) + 2;
-            img_url = filesearch.substr(start, end - start) + i;
+            invalid = filesearch.rfind('\"', end);
+            if(start > invalid)
+            {
+                img_url = filesearch.substr(start, end - start) + i;
+                if(!image_download(img_url, *_dir + "\\pic" + to_string(count) + i, count))
+                    return false;
+            }
             filesearch = filesearch.substr(end + i.size());
-            if(!image_download(img_url, *_dir + "\\pic" + to_string(count) + i))
-                return false;
-            count++;
         }
     }
     return true;
 }
 
-bool Model::image_download(string& img_url, string path)
+bool Model::image_download(string& img_url, string path, int& count)
 {
     //curl thing
     FILE* output_img;
     CURL* image; 
     CURLcode imgresult;
+    string useragent;
+    int sz = 0;
 
     image = curl_easy_init(); 
     if(image)
     {
         // Open file 
-        output_img = fopen(path.c_str(), "wb"); 
+        output_img = fopen(path.c_str(), "wb");
+        useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36";
         if(output_img == NULL)
         {
 //            QMessageBox::information(nullptr,"Error", "File opened failed.");
@@ -613,13 +623,19 @@ bool Model::image_download(string& img_url, string path)
         }
         curl_easy_setopt(image, CURLOPT_URL, img_url.c_str()); 
         curl_easy_setopt(image, CURLOPT_WRITEFUNCTION, NULL); 
-        curl_easy_setopt(image, CURLOPT_WRITEDATA, output_img); 
+        curl_easy_setopt(image, CURLOPT_WRITEDATA, output_img);
+        curl_easy_setopt(image, CURLOPT_USERAGENT, useragent.c_str());
 
-        imgresult = curl_easy_perform(image); 
-//        if(imgresult)
+        imgresult = curl_easy_perform(image);
+        fseek(output_img, 0L, SEEK_END);
+        sz = ftell(output_img);
 //            QMessageBox::information(nullptr,"Error", "Image download failed.");
     }
     curl_easy_cleanup(image);
     fclose(output_img);
+    if(imgresult || sz == 0)
+        remove(path.c_str());
+    else
+        count++;
     return true;
 }

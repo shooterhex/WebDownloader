@@ -24,6 +24,7 @@
 
 #include <thread>
 #include <chrono>
+#include <future>
 
 #include <filesystem>
 #include <any>
