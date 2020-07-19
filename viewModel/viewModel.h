@@ -33,7 +33,6 @@ public:
 private:
     //任务列表
     std::shared_ptr<QQueue<WebTask>> _taskList;
-
-private:
     std::shared_ptr<Model>  m_spModel;
+    std::thread downloading_task;
 };
