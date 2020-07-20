@@ -40,6 +40,9 @@ PropertyNotification ViewModel::get_notification()
                 }
                 else if(uID == TASK_SINGLE_FINISHED)
                 {
+                    auto f = download_result.get_future();
+                    char result = f.get();
+                    downloading_task.join();
                     //任务完成时，删除第一项任务
                     _taskList->pop_front();
 
@@ -50,9 +53,8 @@ PropertyNotification ViewModel::get_notification()
                         this->m_spModel->setDir(t.dir);
                         this->m_spModel->setUrl(t.url);
                         this->m_spModel->setType(t.type);
-                        this->m_spModel->downLoad();
-
-                    };
+                        downloading_task = std::thread(&Model::downLoad, std::move(download_result));
+                    }
                     this->Fire(TASK_LIST_CHANGED);
                 }
             };
@@ -69,15 +71,15 @@ CommandFunc ViewModel::get_DownloadCommand()
 
         Fire(TASK_LIST_CHANGED);
 
-        auto f = download_result.get_future();
+
         if(downloading_task.joinable()) //joinable时表示下载线程正在运行
         {
             return 2;
         }
         else
         {
-            downloading_task = std::thread(&m_spModel->downLoad(), std::move(p));
-            return f.get();
+            downloading_task = std::thread(&Model::downLoad, std::move(download_result));
+            return 3; //表示开始下载
         }
     };
 };
