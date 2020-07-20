@@ -48,12 +48,14 @@ void Model::downLoad(promise<bool>&& p)
     {
 //        QMessageBox::information(nullptr,"Error","The URL is invalid!");
         p.set_value(0);
+        Fire(TASK_SINGLE_FINISHED);
         return;
     }
     else if(_dir->empty())
     {
 //        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
         p.set_value(0);
+        Fire(TASK_SINGLE_FINISHED);
         return;
     }
 //    QMessageBox::information(nullptr,"download","begin");//测试用
@@ -121,6 +123,8 @@ void Model::downLoad(promise<bool>&& p)
         p.set_value(1);
     else
         p.set_value(0);
+    
+    Fire(TASK_SINGLE_FINISHED);
     return;
 };
 

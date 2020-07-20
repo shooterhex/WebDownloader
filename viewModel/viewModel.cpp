@@ -55,7 +55,7 @@ PropertyNotification ViewModel::get_notification()
                         this->m_spModel->setType(t.type);
                         downloading_task = std::thread(&Model::downLoad, std::move(download_result));
                     }
-                    this->Fire(TASK_LIST_CHANGED);
+                    this->Fire(result); //result输出到mainwindow 再由mainwindow把uid改回TASK_LIST_CHANGED
                 }
             };
 };
@@ -70,7 +70,6 @@ CommandFunc ViewModel::get_DownloadCommand()
         _taskList->push_back(t);
 
         Fire(TASK_LIST_CHANGED);
-
 
         if(downloading_task.joinable()) //joinable时表示下载线程正在运行
         {
