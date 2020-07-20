@@ -35,4 +35,5 @@ private:
     std::shared_ptr<QQueue<WebTask>> _taskList;
     std::shared_ptr<Model>  m_spModel;
     std::thread downloading_task;
+    std::promise<bool> download_result;
 };

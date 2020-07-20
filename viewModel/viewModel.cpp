@@ -69,10 +69,16 @@ CommandFunc ViewModel::get_DownloadCommand()
 
         Fire(TASK_LIST_CHANGED);
 
-        if(downloading_task.get_id()) //非零时表示下载线程正在
-            downloading_task = std::thread(this->m_spModel->downLoad());
+        auto f = download_result.get_future();
+        if(downloading_task.joinable()) //joinable时表示下载线程正在运行
+        {
+            return 2;
+        }
         else
-            return true;
+        {
+            downloading_task = std::thread(&m_spModel->downLoad(), std::move(p));
+            return f.get();
+        }
     };
 };
 CommandFunc ViewModel::get_SetDirCommand()
