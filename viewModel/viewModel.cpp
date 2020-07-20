@@ -78,7 +78,7 @@ CommandFunc ViewModel::get_DownloadCommand()
         else if(!downloading_task.joinable()) //joinable时表示下载线程正在运行 因此什么都不用做
         {
             downloading_task = std::thread(&Model::downLoad, std::move(download_result));
-            Fire(3); //弹窗提示开始下载
+            Fire(TASK_BEGIN); //弹窗提示开始下载
         }
         return true; //NULL statement
     };

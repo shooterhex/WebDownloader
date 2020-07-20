@@ -43,18 +43,23 @@ PropertyNotification MainWindow::get_Notification()
 {
     return [this](uint32_t uID)
                 {
-                    if (uID == TASK_LIST_CHANGED) {
-                        this->update();
-                    }
-                    else
+                    switch (uID)
                     {
-                        if (res) {
-                            qDebug()<<"succeed OnBtnDownload\n";
-                        }
-                        else {
-                            qDebug()<<"failed OnBtnDownload\n";
-                        }
+                    case TASK_SINGLE_SUCEEDED:
+                        /* code */
+                        break;
+                    
+                    case TASK_SINGLE_FAILED:
+                        /* code */
+                        break;
+                    
+                    case TASK_BEGIN:
+                        /* code */
+                        break;
+                    
+                    default: break;
                     }
+                    this->update();
                 };
 }
 
