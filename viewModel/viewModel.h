@@ -36,4 +36,5 @@ private:
     std::shared_ptr<Model>  m_spModel;
     std::thread downloading_task;
     std::promise<char> download_result;
+    bool is_task_finished;
 };

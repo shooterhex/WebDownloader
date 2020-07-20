@@ -32,6 +32,15 @@ PropertyNotification MainWindow::get_Notification()
                     if (uID == TASK_LIST_CHANGED) {
                         this->update();
                     }
+                    else
+                    {
+                        if (res) {
+                            qDebug()<<"succeed OnBtnDownload\n";
+                        }
+                        else {
+                            qDebug()<<"failed OnBtnDownload\n";
+                        }
+                    }
                 };
 }
 
@@ -69,12 +78,6 @@ void MainWindow::OnBtnDownload()
     m_viewModel->get_SetTypeCommand()(typeID);
 
     auto res = m_cmdFunc_Download(std::any(WebTask{0,dir,url,typeID})); //Dummy argument
-    if (res) {
-        qDebug()<<"succeed OnBtnDownload\n";
-    }
-    else {
-        qDebug()<<"failed OnBtnDownload\n";
-    }
 }
 
 void MainWindow::OnBtnChooseFile()

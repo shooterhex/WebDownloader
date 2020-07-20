@@ -3,8 +3,7 @@
 ViewModel::ViewModel()
 {
     _taskList=std::make_shared<QQueue<WebTask>>();
-
-
+    is_task_finished = false;
 };
 ViewModel::~ViewModel(){};
 void ViewModel::SetModel(const std::shared_ptr<Model>& spModel)
@@ -38,11 +37,9 @@ PropertyNotification ViewModel::get_notification()
                 if( uID == TASK_LIST_CHANGED ) {
                     this->Fire(uID);
                 }
-                else if(uID == TASK_SINGLE_FINISHED)
+                else if(uID == TASK_SINGLE_SUCEEDED || uID == TASK_SINGLE_FAILED)
                 {
-                    auto f = download_result.get_future();
-                    char result = f.get();
-                    downloading_task.join();
+                    this->Fire(uID); //result输出到mainwindow 再由mainwindow把uid改回TASK_LIST_CHANGED
                     //任务完成时，删除第一项任务
                     _taskList->pop_front();
 
@@ -53,9 +50,10 @@ PropertyNotification ViewModel::get_notification()
                         this->m_spModel->setDir(t.dir);
                         this->m_spModel->setUrl(t.url);
                         this->m_spModel->setType(t.type);
-                        downloading_task = std::thread(&Model::downLoad, std::move(download_result));
+                        this->m_spModel->downLoad();
                     }
-                    this->Fire(result); //result输出到mainwindow 再由mainwindow把uid改回TASK_LIST_CHANGED
+                    else
+                        is_task_finished = true;
                 }
             };
 };
@@ -71,15 +69,17 @@ CommandFunc ViewModel::get_DownloadCommand()
 
         Fire(TASK_LIST_CHANGED);
 
-        if(downloading_task.joinable()) //joinable时表示下载线程正在运行
+        if(is_task_finished)
         {
-            return 2;
+            downloading_task.join(); //回收线程
+            is_task_finished = false; //重新初始化
         }
-        else
+        else if(!downloading_task.joinable()) //joinable时表示下载线程正在运行 因此什么都不用做
         {
             downloading_task = std::thread(&Model::downLoad, std::move(download_result));
-            return 3; //表示开始下载
+            Fire(3); //弹窗提示开始下载
         }
+        return true; //NULL statement
     };
 };
 CommandFunc ViewModel::get_SetDirCommand()

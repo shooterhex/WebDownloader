@@ -41,21 +41,19 @@ bool Model::setType(const int &type) {
 
 //【by:李智】下载的线程要求：1，外界能够查询是否正在下载 IsDownloading()
 //                          2，download结束后，触发消息 Fire(TASK_SINGLE_FINISHED)
-void Model::downLoad(promise<bool>&& p)
+void Model::downLoad()
 {
     //无法保证url和dir合法，先进行简单检查
     if(_url->empty())
     {
 //        QMessageBox::information(nullptr,"Error","The URL is invalid!");
-        p.set_value(0);
-        Fire(TASK_SINGLE_FINISHED);
+        Fire(TASK_SINGLE_FAILED);
         return;
     }
     else if(_dir->empty())
     {
 //        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
-        p.set_value(0);
-        Fire(TASK_SINGLE_FINISHED);
+        Fire(TASK_SINGLE_FAILED);
         return;
     }
 //    QMessageBox::information(nullptr,"download","begin");//测试用
@@ -120,11 +118,9 @@ void Model::downLoad(promise<bool>&& p)
 
 //    QMessageBox::information(nullptr,"Download Status", message.c_str());
     if(res == CURLE_OK)
-        p.set_value(1);
+        Fire(TASK_SINGLE_SUCEEDED);
     else
-        p.set_value(0);
-    
-    Fire(TASK_SINGLE_FINISHED);
+        Fire(TASK_SINGLE_FAILED);
     return;
 };
 
