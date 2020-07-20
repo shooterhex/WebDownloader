@@ -19,7 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #else: unix:!android: target.path = /opt/$${TARGET}/bin
 #!isEmpty(target.path): INSTALLS += target
 
-CONFIG += c++17
+CONFIG += c++latest
 
 #FORMS += \
 #    WINDOW/about.ui \

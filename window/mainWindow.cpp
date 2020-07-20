@@ -1,9 +1,5 @@
 #include"mainWindow.h"
-#include"ui_mainWindow.h"
-#include<QFileDialog>
-#include<QMessageBox>
-#include"../common/def.h"
-#include<QDebug>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -46,15 +42,15 @@ PropertyNotification MainWindow::get_Notification()
                     switch (uID)
                     {
                     case TASK_SINGLE_SUCEEDED:
-                        /* code */
+                        QMessageBox::information(this, "Success", "Succeeded to download.");
                         break;
                     
                     case TASK_SINGLE_FAILED:
-                        /* code */
+                        QMessageBox::warning(this, "Error", "Failed to download!");
                         break;
                     
                     case TASK_BEGIN:
-                        /* code */
+                        QMessageBox::information(this, "Tasks", "Download start.");
                         break;
                     
                     default: break;
