@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include<QMainWindow>
+#include<any>
 #include<viewModel/viewModel.h>
 #include"../common/cslbase.h"
 
