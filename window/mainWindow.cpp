@@ -1,4 +1,4 @@
-#include"mainWindow.h"
+﻿#include "mainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -90,9 +90,17 @@ void MainWindow::onDownloadButtonPressed()
         typeID = TYPE_PHOTO;
         break;
     }
-    m_viewModel->get_SetTypeCommand()(typeID);
+    //m_viewModel->get_SetTypeCommand()(typeID);
 
-    auto res = m_cmdFunc_Download(std::any(WebTask{0, url, dir, typeID}));
+    bool res = m_cmdFunc_Download(std::any(WebTask{0,url,dir,typeID}));
+    if (res) {
+        m_nTasks += 1;
+        updateStatusBar();
+        qDebug() << "succeed OnBtnDownload\n";
+    }
+    else {
+        qDebug() << "failed OnBtnDownload\n";
+    }
 }
 
 void MainWindow::onChooseFileButtonPressed()

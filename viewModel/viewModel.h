@@ -5,6 +5,7 @@
 #include"../model/model.h"
 #include<memory>
 #include<QQueue>
+#include<QDebug>
 class ViewModel:public PropertyTrigger
 {
 public:

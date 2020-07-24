@@ -70,6 +70,8 @@ CommandFunc ViewModel::get_DownloadCommand()
 
         Fire(TASK_LIST_CHANGED);
 
+        qDebug() << "is_task_finished = " << is_task_finished;
+
         if(is_task_finished)
         {
             downloading_task.join(); //回收线程
