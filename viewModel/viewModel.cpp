@@ -30,6 +30,8 @@ std::shared_ptr<QQueue<WebTask>> ViewModel::get_TaskList() noexcept
 };
 
 
+
+
 PropertyNotification ViewModel::get_notification()
 {
     return [this](uint32_t uID)
@@ -55,7 +57,6 @@ PropertyNotification ViewModel::get_notification()
 
 CommandFunc ViewModel::get_DownloadCommand()
 {
-    static int cnt;
     return [this](std::any&& param)->bool
     {
         //此处auto可能有问题

@@ -82,7 +82,7 @@ public:
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
     std::string txt_proc(MemoryStruct& mem);
     bool image_proc(MemoryStruct& mem);
-    bool image_download(std::string& img_url, std::string path);
+    bool image_download(std::string& img_url, std::string path, int& count);
 
 private:
     std::shared_ptr<std::string> _htmltxt;

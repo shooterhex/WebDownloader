@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ﻿#include "mainWindow.h"
+=======
+#include"mainWindow.h"
+#include"ui_mainWindow.h"
+#include<QFileDialog>
+#include<QMessageBox>
+#include"../common/def.h"
+>>>>>>> image_feature
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,6 +47,7 @@ PropertyNotification MainWindow::get_Notification()
 {
     return [this](uint32_t uID)
                 {
+<<<<<<< HEAD
                     switch (uID)
                     {
                     case TASK_SINGLE_SUCEEDED:
@@ -54,6 +63,10 @@ PropertyNotification MainWindow::get_Notification()
                         break;
                     
                     default: break;
+=======
+                    if (uID == HTMLTEXT) {
+                        this->update();
+>>>>>>> image_feature
                     }
                     this->update();
                 };
@@ -92,6 +105,7 @@ void MainWindow::onDownloadButtonPressed()
     }
     //m_viewModel->get_SetTypeCommand()(typeID);
 
+<<<<<<< HEAD
     bool res = m_cmdFunc_Download(std::any(WebTask{0,url,dir,typeID}));
     if (res) {
         m_nTasks += 1;
@@ -100,6 +114,14 @@ void MainWindow::onDownloadButtonPressed()
     }
     else {
         qDebug() << "failed OnBtnDownload\n";
+=======
+    auto res = m_cmdFunc_Download(std::any()); //Dummy argument
+    if (res) {
+        QMessageBox::information(this, "Success", "Succeeded to download.");
+    }
+    else {
+        QMessageBox::warning(this, "Error", "Failed to download!");
+>>>>>>> image_feature
     }
 }
 
