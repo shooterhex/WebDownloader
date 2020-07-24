@@ -1,4 +1,4 @@
-#include"viewModel.h"
+﻿#include"viewModel.h"
 
 ViewModel::ViewModel()
 {
@@ -63,7 +63,6 @@ CommandFunc ViewModel::get_DownloadCommand()
     static int cnt;
     return [this](std::any&& param)->bool
     {
-        //此处auto可能有问题
         WebTask t=std::any_cast<WebTask>(param);
         t.id=cnt++;
         _taskList->push_back(t);
@@ -77,6 +76,9 @@ CommandFunc ViewModel::get_DownloadCommand()
         }
         else if(!downloading_task.joinable()) //joinable时表示下载线程正在运行 因此什么都不用做
         {
+            this->m_spModel->setDir(t.dir);
+            this->m_spModel->setUrl(t.url);
+            this->m_spModel->setType(t.type);
             downloading_task = std::thread(&Model::downLoad, m_spModel);
             Fire(TASK_BEGIN); //弹窗提示开始下载
         }

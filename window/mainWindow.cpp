@@ -42,20 +42,20 @@ PropertyNotification MainWindow::get_Notification()
                     switch (uID)
                     {
                     case TASK_SINGLE_SUCEEDED:
-                        QMessageBox::information(this, "Success", "Succeeded to download.");
+                        //QMessageBox::information(this, "Success", "Succeeded to download.");
                         break;
                     
                     case TASK_SINGLE_FAILED:
-                        QMessageBox::warning(this, "Error", "Failed to download!");
+                        //QMessageBox::warning(this, "Error", "Failed to download!");
                         break;
                     
                     case TASK_BEGIN:
-                        QMessageBox::information(this, "Tasks", "Download start.");
+                        //QMessageBox::information(this, "Tasks", "Download start.");
                         break;
                     
                     default: break;
                     }
-                    this->update();
+                    //this->update();
                 };
 }
 
@@ -74,9 +74,7 @@ void MainWindow::onDownloadButtonPressed()
     set_DownloadCommand(m_viewModel->get_DownloadCommand());
 
     std::string dir = ui->dirTextEdit->toPlainText().toStdString();
-//    m_viewModel->get_SetDirCommand()(dir);
     std::string url = ui->urlTextEdit->toPlainText().toStdString();
-//    m_viewModel->get_SetUrlCommand()(url);
 
     int typeID = -1;
     switch (ui->fileTypeComboBox->currentIndex()) {
@@ -97,13 +95,13 @@ void MainWindow::onDownloadButtonPressed()
 
 void MainWindow::onChooseFileButtonPressed()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("选择写入文件的路径"));
+    QString fileName = QFileDialog::getSaveFileName(this,QStringLiteral("选择写入文件的路径"));
     ui->dirTextEdit->setText(fileName);
 }
 
 void MainWindow::onChooseDirButtonPressed()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, tr("选择写入目录的路径"));
+    QString dirName = QFileDialog::getExistingDirectory(this, QStringLiteral("选择写入目录的路径"));
     ui->dirTextEdit->setText(dirName);
 }
 
@@ -167,5 +165,5 @@ void MainWindow::updateTaskList()
 
 void MainWindow::updateStatusBar()
 {
-    m_statusBarLabel->setText(tr("总任务数：%1").arg(m_nTasks));
+    m_statusBarLabel->setText(QStringLiteral("总任务数：%1").arg(m_nTasks));
 }
