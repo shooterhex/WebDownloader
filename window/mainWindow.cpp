@@ -1,4 +1,4 @@
-﻿﻿#include "mainWindow.h"
+﻿#include "mainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -93,7 +93,6 @@ void MainWindow::onDownloadButtonPressed()
     bool res = m_cmdFunc_Download(std::any(WebTask{0,url,dir,typeID}));
     if (res) {
         m_nTasks += 1;
-        updateStatusBar();
         qDebug() << "succeed OnBtnDownload\n";
     }
     else {
@@ -103,7 +102,7 @@ void MainWindow::onDownloadButtonPressed()
 
 void MainWindow::onChooseFileButtonPressed()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, QStringLiteral("选择写入文件的路径"));
+    QString fileName = QFileDialog::getSaveFileName(this,QStringLiteral("选择写入文件的路径"));
     ui->dirTextEdit->setText(fileName);
 }
 
