@@ -1,4 +1,4 @@
-#include"mainWindow.h"
+﻿#include"mainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -92,7 +92,7 @@ void MainWindow::onDownloadButtonPressed()
     }
     m_viewModel->get_SetTypeCommand()(typeID);
 
-    auto res = m_cmdFunc_Download(std::any(WebTask{.id = 0, .url = url, .dir = dir, .type = typeID}));
+    auto res = m_cmdFunc_Download(std::any(WebTask{0,url,dir,typeID}));
 }
 
 void MainWindow::onChooseFileButtonPressed()
