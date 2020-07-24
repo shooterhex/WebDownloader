@@ -39,39 +39,34 @@ bool Model::setType(const int &type) {
 
 //【by:李智】下载的线程要求：1，外界能够查询是否正在下载 IsDownloading()
 //                          2，download结束后，触发消息 Fire(TASK_SINGLE_FINISHED)
-bool Model::downLoad()
+void Model::downLoad()
 {
+
     //无法保证url和dir合法，先进行简单检查
-    if(_url->empty())
-    {
-        QMessageBox::information(nullptr,"Error","The URL is nullptr!");
-        return false;
-    }
-    else if(_dir->empty())
-    {
-        QMessageBox::information(nullptr,"Error","The target directory is nullptr!");
-        return false;
-    };
+    qDebug()<<"downLoadBegin";
     CURL *curl_handle;
     CURLcode res;
     MemoryStruct mem;
-    string message;
+    string message, useragent;
     ofstream out;
-
     curl_global_init(CURL_GLOBAL_ALL);
 
     curl_handle = curl_easy_init();
-
     if(curl_handle)
     {
+        useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36";
         curl_easy_setopt(curl_handle, CURLOPT_URL, _url->c_str());
         curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&mem);
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, useragent.c_str());
+
         res = curl_easy_perform(curl_handle);
 
         if(res == CURLE_OK)
         {
+            qDebug()<<"CURLE_OK";
+
             switch(type) {
             case TYPE_HTML:
                 out.open(_dir->c_str());
@@ -105,16 +100,10 @@ bool Model::downLoad()
         message = "curl handle cannot be initialized!\n";
     curl_easy_cleanup(curl_handle);
     curl_global_cleanup();
-
-    //最好另开线程进行下载，否则下载时间太长时，整个程序会因等待下载而失去响应
-    //不过第一轮迭代不要求这一点，之后再添加
-    //此处不进行实际保存，存到变量_htmltxt中即可
-
-    QMessageBox::information(nullptr,"Download Status", message.c_str());
-    if(res == CURLE_OK)
-        return true;
-    else
-        return false;
+    //原本应当传递消息。但是Fire会导致报错:Widgets must be created in the GUI thread.
+    qDebug()<<"downLoad end";
+    Fire(TASK_SINGLE_SUCEEDED);
+    return;
 };
 
 
@@ -561,6 +550,7 @@ bool Model::image_proc(MemoryStruct& mem)
 {
     //find jpg, png, bmp, gif, jpeg, svg
     int start, end, count;
+    int invalid;
     string img_url, filetype[6];
     string path, filesearch;
     filetype[0]=".jpg";
@@ -580,42 +570,54 @@ bool Model::image_proc(MemoryStruct& mem)
             if(end == -1)
                 break;
             start = filesearch.rfind("//", end) + 2;
-            img_url = filesearch.substr(start, end - start) + i;
+            invalid = filesearch.rfind('\"', end);
+            if(start > invalid)
+            {
+                img_url = filesearch.substr(start, end - start) + i;
+                if(!image_download(img_url, *_dir + "\\pic" + to_string(count) + i, count))
+                    return false;
+            }
             filesearch = filesearch.substr(end + i.size());
-            if(!image_download(img_url, *_dir + "\\pic" + to_string(count) + i))
-                return false;
-            count++;
         }
     }
     return true;
 }
 
-bool Model::image_download(string& img_url, string path)
+bool Model::image_download(string& img_url, string path, int& count)
 {
     //curl thing
     FILE* output_img;
     CURL* image; 
     CURLcode imgresult;
+    string useragent;
+    int sz = 0;
 
     image = curl_easy_init(); 
     if(image)
     {
         // Open file 
-        output_img = fopen(path.c_str(), "wb"); 
+        output_img = fopen(path.c_str(), "wb");
+        useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36";
         if(output_img == NULL)
         {
-            QMessageBox::information(nullptr,"Error", "File opened failed."); 
+//            QMessageBox::information(nullptr,"Error", "File opened failed.");
             return false;
         }
         curl_easy_setopt(image, CURLOPT_URL, img_url.c_str()); 
         curl_easy_setopt(image, CURLOPT_WRITEFUNCTION, NULL); 
-        curl_easy_setopt(image, CURLOPT_WRITEDATA, output_img); 
+        curl_easy_setopt(image, CURLOPT_WRITEDATA, output_img);
+        curl_easy_setopt(image, CURLOPT_USERAGENT, useragent.c_str());
 
-        imgresult = curl_easy_perform(image); 
-        if(imgresult)
-            QMessageBox::information(nullptr,"Error", "Image download failed.");
+        imgresult = curl_easy_perform(image);
+        fseek(output_img, 0L, SEEK_END);
+        sz = ftell(output_img);
+//            QMessageBox::information(nullptr,"Error", "Image download failed.");
     }
     curl_easy_cleanup(image);
     fclose(output_img);
+    if(imgresult || sz == 0)
+        remove(path.c_str());
+    else
+        count++;
     return true;
 }

@@ -4,6 +4,11 @@
 #include<any>
 #include<viewModel/viewModel.h>
 #include"../common/cslbase.h"
+#include"ui_mainWindow.h"
+#include<QFileDialog>
+#include<QMessageBox>
+#include"../common/def.h"
+#include<QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

@@ -43,9 +43,23 @@ PropertyNotification MainWindow::get_Notification()
 {
     return [this](uint32_t uID)
                 {
-                    if (uID == TASK_LIST_CHANGED) {
-                        this->update();
+                    switch (uID)
+                    {
+                    case TASK_SINGLE_SUCEEDED:
+                        //QMessageBox::information(this, "Success", "Succeeded to download.");
+                        break;
+                    
+                    case TASK_SINGLE_FAILED:
+                        //QMessageBox::warning(this, "Error", "Failed to download!");
+                        break;
+                    
+                    case TASK_BEGIN:
+                        //QMessageBox::information(this, "Tasks", "Download start.");
+                        break;
+                    
+                    default: break;
                     }
+                    //this->update();
                 };
 }
 
@@ -64,9 +78,7 @@ void MainWindow::onDownloadButtonPressed()
     set_DownloadCommand(m_viewModel->get_DownloadCommand());
 
     std::string dir = ui->dirTextEdit->toPlainText().toStdString();
-//    m_viewModel->get_SetDirCommand()(dir);
     std::string url = ui->urlTextEdit->toPlainText().toStdString();
-//    m_viewModel->get_SetUrlCommand()(url);
 
     int typeID = -1;
     switch (ui->fileTypeComboBox->currentIndex()) {
@@ -85,7 +97,6 @@ void MainWindow::onDownloadButtonPressed()
     bool res = m_cmdFunc_Download(std::any(WebTask{0,url,dir,typeID}));
     if (res) {
         m_nTasks += 1;
-        updateStatusBar();
         qDebug() << "succeed OnBtnDownload\n";
     }
     else {
@@ -95,13 +106,13 @@ void MainWindow::onDownloadButtonPressed()
 
 void MainWindow::onChooseFileButtonPressed()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("选择写入文件的路径"));
+    QString fileName = QFileDialog::getSaveFileName(this,QStringLiteral("选择写入文件的路径"));
     ui->dirTextEdit->setText(fileName);
 }
 
 void MainWindow::onChooseDirButtonPressed()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, tr("选择写入目录的路径"));
+    QString dirName = QFileDialog::getExistingDirectory(this, QStringLiteral("选择写入目录的路径"));
     ui->dirTextEdit->setText(dirName);
 }
 
@@ -126,8 +137,8 @@ void MainWindow::onTaskListActionTriggered()
 
 void MainWindow::onAboutActionTriggered()
 {
-    static QString aboutInfo = tr("WebDownload by C++ project group");
-    QMessageBox::information(this, tr("关于"), aboutInfo);
+    static QString aboutInfo = QStringLiteral("WebDownload by C++ project group");
+    QMessageBox::information(this, tr("About"), aboutInfo);
 }
 
 void MainWindow::onRefreshTaskListButtonPressed()
@@ -139,12 +150,12 @@ void MainWindow::updateTaskList()
 {
     auto queue = m_viewModel->get_TaskList();
     if (! queue) {
-        QMessageBox::critical(this, tr("错误"), tr("加载任务队列时失败！"));
+        QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("加载任务队列时失败！"));
         return;
     }
     m_nTasks = queue->size();
 
-    ui->taskListLabel->setText(tr("任务列表：%1项进行中").arg(queue->size()));
+    ui->taskListLabel->setText(QStringLiteral("任务列表：%1项进行中").arg(queue->size()));
 
     auto* table = ui->taskListTableWidget;
     table->clearContents();
@@ -165,5 +176,5 @@ void MainWindow::updateTaskList()
 
 void MainWindow::updateStatusBar()
 {
-    m_statusBarLabel->setText(tr("总任务数：%1").arg(m_nTasks));
+    m_statusBarLabel->setText(QStringLiteral("总任务数：%1").arg(m_nTasks));
 }

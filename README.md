@@ -87,3 +87,7 @@ View：田文杰
 Model：郑无恙
 
 ViewModel : 李智
+
+## 老师要求 ##
+1. curl可以不放在common 因为它仅仅被model使用；Model包含了QMessageBox.h这个不妥；window层包含了VM的头文件，破坏框架，退回MVC模式了。可以看看多线程异步处理方式 ，在主线程触发属性改变的通知
+2. QMessageBox就是界面，不要放在Model 可以把多线程处理后的信息字符串当作属性暴露出来，异步触发主线程的属性改变通知来做
