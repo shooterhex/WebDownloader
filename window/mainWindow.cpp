@@ -126,8 +126,8 @@ void MainWindow::onTaskListActionTriggered()
 
 void MainWindow::onAboutActionTriggered()
 {
-    static QString aboutInfo = tr("WebDownload by C++ project group");
-    QMessageBox::information(this, tr("关于"), aboutInfo);
+    static QString aboutInfo = QStringLiteral("WebDownload by C++ project group");
+    QMessageBox::information(this, tr("About"), aboutInfo);
 }
 
 void MainWindow::onRefreshTaskListButtonPressed()
@@ -144,7 +144,7 @@ void MainWindow::updateTaskList()
     }
     m_nTasks = queue->size();
 
-    ui->taskListLabel->setText(tr("任务列表：%1项进行中").arg(queue->size()));
+    ui->taskListLabel->setText(QStringLiteral("任务列表：%1项进行中").arg(queue->size()));
 
     auto* table = ui->taskListTableWidget;
     table->clearContents();
