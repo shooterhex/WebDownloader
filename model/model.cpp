@@ -1,4 +1,4 @@
-#include"model.h"
+﻿#include"model.h"
 using namespace  std;
 Model::Model()
 {
@@ -35,8 +35,6 @@ bool Model::setType(const int &type) {
     this->type=type;
     return true;
 }
-//下面实3个空函数，需要填充实际运行代码
-//此处只是为了便于编译通过
 //【by：田文杰】如果后续需要修改返回值类型，修改后的类型必须可以转换成bool
 
 //【by:李智】下载的线程要求：1，外界能够查询是否正在下载 IsDownloading()
@@ -46,16 +44,14 @@ bool Model::downLoad()
     //无法保证url和dir合法，先进行简单检查
     if(_url->empty())
     {
-        QMessageBox::information(nullptr,"Error","The URL is invalid!");
+        QMessageBox::information(nullptr,"Error","The URL is nullptr!");
         return false;
     }
     else if(_dir->empty())
     {
-        QMessageBox::information(nullptr,"Error","The target directory is invalid!");
+        QMessageBox::information(nullptr,"Error","The target directory is nullptr!");
         return false;
-    }
-    QMessageBox::information(nullptr,"download","begin");//测试用
-
+    };
     CURL *curl_handle;
     CURLcode res;
     MemoryStruct mem;

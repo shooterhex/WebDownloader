@@ -72,7 +72,10 @@ CommandFunc ViewModel::get_DownloadCommand()
 
         if(m_spModel->IsDownloading()){
             return true;
-        }
+        };
+        this->m_spModel->setDir(t.dir);
+        this->m_spModel->setUrl(t.url);
+        this->m_spModel->setType(t.type);
         return this->m_spModel->downLoad();
     };
 };
