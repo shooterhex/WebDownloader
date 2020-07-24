@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include"../common/cslbase.h"
 #include"../common/def.h"
@@ -37,5 +37,7 @@ private:
     std::shared_ptr<Model>  m_spModel;
     std::thread downloading_task;
     std::promise<char> download_result;
-    bool is_task_finished;
+    bool isThreadLive=false;
+
+    bool isDownloading=false;
 };
