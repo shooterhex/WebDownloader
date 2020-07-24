@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include"../common/cslbase.h"
 #include"../common/def.h"
@@ -6,6 +6,8 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include <QMessageBox>
+#include <QtDebug>
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
@@ -72,6 +74,8 @@ public:
                     //读取_dir,_url,将下载的内容存入_htmltxt
                     //fire
                     //函数正常执行,返回true
+    void test();
+
     bool setUrl(const std::string& str);//设置_url
     bool setDir(const std::string& str);//设置_Dir
     bool setType(const int& type);

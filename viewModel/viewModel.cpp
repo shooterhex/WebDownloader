@@ -60,7 +60,6 @@ CommandFunc ViewModel::get_DownloadCommand()
     static int cnt;
     return [this](std::any&& param)->bool
     {
-        //此处auto可能有问题
         WebTask t=std::any_cast<WebTask>(param);
         t.id=cnt++;
         _taskList->push_back(t);

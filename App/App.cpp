@@ -1,4 +1,4 @@
-#include"App.h"
+﻿#include"App.h"
 void App::run()
 {
     //消息传递的绑定

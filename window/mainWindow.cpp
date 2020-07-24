@@ -1,4 +1,4 @@
-﻿#include "mainWindow.h"
+﻿﻿#include "mainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -42,20 +42,20 @@ PropertyNotification MainWindow::get_Notification()
                     switch (uID)
                     {
                     case TASK_SINGLE_SUCEEDED:
-                        QMessageBox::information(this, "Success", "Succeeded to download.");
+                        //QMessageBox::information(this, "Success", "Succeeded to download.");
                         break;
                     
                     case TASK_SINGLE_FAILED:
-                        QMessageBox::warning(this, "Error", "Failed to download!");
+                        //QMessageBox::warning(this, "Error", "Failed to download!");
                         break;
                     
                     case TASK_BEGIN:
-                        QMessageBox::information(this, "Tasks", "Download start.");
+                        //QMessageBox::information(this, "Tasks", "Download start.");
                         break;
                     
                     default: break;
                     }
-                    this->update();
+                    //this->update();
                 };
 }
 
@@ -74,9 +74,7 @@ void MainWindow::onDownloadButtonPressed()
     set_DownloadCommand(m_viewModel->get_DownloadCommand());
 
     std::string dir = ui->dirTextEdit->toPlainText().toStdString();
-//    m_viewModel->get_SetDirCommand()(dir);
     std::string url = ui->urlTextEdit->toPlainText().toStdString();
-//    m_viewModel->get_SetUrlCommand()(url);
 
     int typeID = -1;
     switch (ui->fileTypeComboBox->currentIndex()) {
@@ -136,8 +134,8 @@ void MainWindow::onTaskListActionTriggered()
 
 void MainWindow::onAboutActionTriggered()
 {
-    static QString aboutInfo = tr("WebDownload by C++ project group");
-    QMessageBox::information(this, tr("关于"), aboutInfo);
+    static QString aboutInfo = QStringLiteral("WebDownload by C++ project group");
+    QMessageBox::information(this, tr("About"), aboutInfo);
 }
 
 void MainWindow::onRefreshTaskListButtonPressed()
