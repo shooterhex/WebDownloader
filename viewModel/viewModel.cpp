@@ -1,4 +1,4 @@
-#include"viewModel.h"
+﻿#include"viewModel.h"
 
 ViewModel::ViewModel()
 {
@@ -57,12 +57,12 @@ PropertyNotification ViewModel::get_notification()
                 }
             };
 };
+
 CommandFunc ViewModel::get_DownloadCommand()
 {
     static int cnt;
     return [this](std::any&& param)->bool
     {
-        //此处auto可能有问题
         WebTask t=std::any_cast<WebTask>(param);
         t.id=cnt++;
         _taskList->push_back(t);
@@ -70,9 +70,6 @@ CommandFunc ViewModel::get_DownloadCommand()
 
         Fire(TASK_LIST_CHANGED);
 
-        //测试用
-        //在此处截断
-        return true;
         if(m_spModel->IsDownloading()){
             return true;
         }

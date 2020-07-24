@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include<QMainWindow>
+#include<any>
 #include<viewModel/viewModel.h>
 #include"../common/cslbase.h"
 
@@ -23,22 +24,33 @@ class MainWindow:public QMainWindow
 
         void set_DownloadCommand(CommandFunc&& cf);
         void setViewModel(ViewModel* viewModel);
-private slots:
-        void OnBtnDownload();
-        void OnBtnChooseFile();
-        void OnBtnChooseDir();
 
-        void OnNewTaskButtonPressed();
-        void OnTaskListButtonPressed();
+private slots:
+        void onDownloadButtonPressed();
+        void onChooseFileButtonPressed();
+        void onChooseDirButtonPressed();
+        void onRefreshTaskListButtonPressed();
+
+        void onNewTaskActionTriggered();
+        void onQuitActionTriggered();
+        void onTaskListActionTriggered();
+        void onAboutActionTriggered();
 
     private:
         Ui::MainWindow *ui;
-        std::shared_ptr<CommandFunc> _downloadCommand;
+        std::shared_ptr<CommandFunc> m_downloadCommand;
         //std::shared_ptr<ICommandBase> _ptrM2Command;
         //std::shared_ptr<ICommandBase> _ptrAboutCommand;
+
+        //Attached to status bar
+        QLabel* m_statusBarLabel;
 
         CommandFunc m_cmdFunc_Download;
         ViewModel* m_viewModel;
 
+        //Number of tasks in the task list
+        int m_nTasks;
+
         void updateTaskList();
+        void updateStatusBar();
 };
