@@ -1,4 +1,4 @@
-#include"viewModel.h"
+﻿#include"viewModel.h"
 
 ViewModel::ViewModel()
 {
@@ -34,27 +34,22 @@ PropertyNotification ViewModel::get_notification()
 {
     return [this](uint32_t uID)
             {
-                if( uID == TASK_LIST_CHANGED ) {
-                    this->Fire(uID);
-                }
-                else if(uID == TASK_SINGLE_SUCEEDED || uID == TASK_SINGLE_FAILED)
-                {
-                    this->Fire(uID); //result输出到mainwindow 再由mainwindow把uid改回TASK_LIST_CHANGED
-                    //任务完成时，删除第一项任务
-                    _taskList->pop_front();
+                // 异步触发可尝试信号槽机制实现
+                // this->Fire(uID); //result输出到mainwindow 再由mainwindow把uid改回TASK_LIST_CHANGED
+                //任务完成时，删除第一项任务
+                _taskList->pop_front();
 
-                    //检查是否有待下载任务
-                    if(!_taskList->empty())
-                    {
-                        auto t=_taskList->front();
-                        this->m_spModel->setDir(t.dir);
-                        this->m_spModel->setUrl(t.url);
-                        this->m_spModel->setType(t.type);
-                        this->m_spModel->downLoad();
-                    }
-                    else
-                        is_task_finished = true;
+                //检查是否有待下载任务
+                if(!_taskList->empty())
+                {
+                    auto t=_taskList->front();
+                    this->m_spModel->setDir(t.dir);
+                    this->m_spModel->setUrl(t.url);
+                    this->m_spModel->setType(t.type);
+                    this->m_spModel->downLoad();
                 }
+                else
+                    is_task_finished = true;
             };
 };
 
@@ -79,6 +74,9 @@ CommandFunc ViewModel::get_DownloadCommand()
         }
         else if(!downloading_task.joinable()) //joinable时表示下载线程正在运行 因此什么都不用做
         {
+            this->m_spModel->setDir(t.dir);
+            this->m_spModel->setUrl(t.url);
+            this->m_spModel->setType(t.type);
             downloading_task = std::thread(&Model::downLoad, m_spModel);
             Fire(TASK_BEGIN); //弹窗提示开始下载
         }

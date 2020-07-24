@@ -105,13 +105,13 @@ void MainWindow::onDownloadButtonPressed()
 
 void MainWindow::onChooseFileButtonPressed()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("选择写入文件的路径"));
+    QString fileName = QFileDialog::getSaveFileName(this, QStringLiteral("选择写入文件的路径"));
     ui->dirTextEdit->setText(fileName);
 }
 
 void MainWindow::onChooseDirButtonPressed()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, tr("选择写入目录的路径"));
+    QString dirName = QFileDialog::getExistingDirectory(this, QStringLiteral("选择写入目录的路径"));
     ui->dirTextEdit->setText(dirName);
 }
 
@@ -149,12 +149,12 @@ void MainWindow::updateTaskList()
 {
     auto queue = m_viewModel->get_TaskList();
     if (! queue) {
-        QMessageBox::critical(this, tr("错误"), tr("加载任务队列时失败！"));
+        QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("加载任务队列时失败！"));
         return;
     }
     m_nTasks = queue->size();
 
-    ui->taskListLabel->setText(tr("任务列表：%1项进行中").arg(queue->size()));
+    ui->taskListLabel->setText(QStringLiteral("任务列表：%1项进行中").arg(queue->size()));
 
     auto* table = ui->taskListTableWidget;
     table->clearContents();
@@ -175,5 +175,5 @@ void MainWindow::updateTaskList()
 
 void MainWindow::updateStatusBar()
 {
-    m_statusBarLabel->setText(tr("总任务数：%1").arg(m_nTasks));
+    m_statusBarLabel->setText(QStringLiteral("总任务数：%1").arg(m_nTasks));
 }
