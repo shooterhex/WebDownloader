@@ -3,8 +3,6 @@
 ViewModel::ViewModel()
 {
     _taskList=std::make_shared<QQueue<WebTask>>();
-
-
 };
 ViewModel::~ViewModel(){};
 void ViewModel::SetModel(const std::shared_ptr<Model>& spModel)
@@ -38,10 +36,12 @@ PropertyNotification ViewModel::get_notification()
                 if( uID == TASK_LIST_CHANGED ) {
                     this->Fire(uID);
                 }
-                else if(uID == TASK_SINGLE_FINISHED)
+                else if(uID == TASK_SINGLE_SUCEEDED || uID == TASK_SINGLE_FAILED)
                 {
+                    //this->Fire(uID); //result输出到mainwindow 再由mainwindow把uid改回TASK_LIST_CHANGED
                     //任务完成时，删除第一项任务
                     _taskList->pop_front();
+                    this->Fire(TASK_LIST_CHANGED);
 
                     //检查是否有待下载任务
                     if(!_taskList->empty())
@@ -51,9 +51,10 @@ PropertyNotification ViewModel::get_notification()
                         this->m_spModel->setUrl(t.url);
                         this->m_spModel->setType(t.type);
                         this->m_spModel->downLoad();
-
-                    };
-                    this->Fire(TASK_LIST_CHANGED);
+                        isDownloading=true;
+                    }
+                    else
+                        isDownloading = false;
                 }
             };
 };
@@ -67,13 +68,20 @@ CommandFunc ViewModel::get_DownloadCommand()
         t.id=cnt++;
         _taskList->push_back(t);
 
-
         Fire(TASK_LIST_CHANGED);
 
-        if(m_spModel->IsDownloading()){
-            return true;
+        if(!isDownloading)
+        {
+            this->m_spModel->setDir(t.dir);
+            this->m_spModel->setUrl(t.url);
+            this->m_spModel->setType(t.type);
+            if(isThreadLive)
+                downloading_task.join();
+            downloading_task = std::thread(&Model::downLoad, m_spModel);
+            isDownloading=true;
+            isThreadLive=true;
         }
-        return this->m_spModel->downLoad();
+        return true; //NULL statement
     };
 };
 CommandFunc ViewModel::get_SetDirCommand()

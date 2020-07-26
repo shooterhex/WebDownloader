@@ -7,7 +7,9 @@
 
 //定义属性改变的消息
 #define TASK_LIST_CHANGED 1000
-#define TASK_SINGLE_FINISHED 1001 //正常情况下，此消息只能由model层触发
+#define TASK_SINGLE_SUCEEDED 1001 //正常情况下，此消息只能由model层触发
+#define TASK_SINGLE_FAILED 1002
+#define TASK_BEGIN 1003 //开始下载
 #include<string>
 
 inline std::string fileTypeIdToString(int type)

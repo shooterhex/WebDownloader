@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include"../common/cslbase.h"
 #include"../common/def.h"
@@ -6,6 +6,8 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include <QMessageBox>
+#include <QtDebug>
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义
 #ifdef WINDOWS
@@ -68,10 +70,12 @@ public:
     std::shared_ptr<std::string> get_Htmltxt();
 
     //待实现,以下3个接口都将暴露给viewModel,由viewModel层触发
-    bool downLoad();//
+    void downLoad();//
                     //读取_dir,_url,将下载的内容存入_htmltxt
                     //fire
                     //函数正常执行,返回true
+    void test();
+
     bool setUrl(const std::string& str);//设置_url
     bool setDir(const std::string& str);//设置_Dir
     bool setType(const int& type);
@@ -82,7 +86,7 @@ public:
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
     std::string txt_proc(MemoryStruct& mem);
     bool image_proc(MemoryStruct& mem);
-    bool image_download(std::string& img_url, std::string path);
+    bool image_download(std::string& img_url, std::string path, int& count);
 
 private:
     std::shared_ptr<std::string> _htmltxt;

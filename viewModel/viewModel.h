@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include"../common/cslbase.h"
 #include"../common/def.h"
 #include"../model/model.h"
 #include<memory>
 #include<QQueue>
+#include<QDebug>
 class ViewModel:public PropertyTrigger
 {
 public:
@@ -33,7 +34,10 @@ public:
 private:
     //任务列表
     std::shared_ptr<QQueue<WebTask>> _taskList;
-
-private:
     std::shared_ptr<Model>  m_spModel;
+    std::thread downloading_task;
+    std::promise<char> download_result;
+    bool isThreadLive=false;
+
+    bool isDownloading=false;
 };
