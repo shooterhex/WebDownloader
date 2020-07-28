@@ -36,6 +36,7 @@ HEADERS += \
     model/model.h \
     model/curl/curl.h \
     viewModel/viewModel.h \
+    window/batchparser.h \
     window/mainWindow.h
 
 SOURCES += \
@@ -45,6 +46,7 @@ SOURCES += \
     model/model.cpp \
     viewModel/command/command.cpp \
     viewModel/viewModel.cpp \
+    window/batchparser.cpp \
     window/mainWindow.cpp
 
 FORMS += mainWindow.ui

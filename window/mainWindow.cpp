@@ -3,6 +3,7 @@
 #include<QFileDialog>
 #include<QMessageBox>
 #include"../common/def.h"
+#include"batchparser.h"
 #include<QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -73,12 +74,9 @@ void MainWindow::setViewModel(ViewModel* viewModel)
     m_viewModel = viewModel;
 }
 
-void MainWindow::onDownloadButtonPressed()
+void MainWindow::processDownload(const QString& url, const QString& dir)
 {
     set_DownloadCommand(m_viewModel->get_DownloadCommand());
-
-    std::string dir = ui->dirTextEdit->toPlainText().toStdString();
-    std::string url = ui->urlTextEdit->toPlainText().toStdString();
 
     int typeID = -1;
     switch (ui->fileTypeComboBox->currentIndex()) {
@@ -94,13 +92,26 @@ void MainWindow::onDownloadButtonPressed()
     }
     //m_viewModel->get_SetTypeCommand()(typeID);
 
-    bool res = m_cmdFunc_Download(std::any(WebTask{0,url,dir,typeID}));
+    bool res = m_cmdFunc_Download(std::any(WebTask{0,url.toStdString(),dir.toStdString(),typeID}));
     if (res) {
         m_nTasks += 1;
         qDebug() << "succeed OnBtnDownload\n";
     }
     else {
         qDebug() << "failed OnBtnDownload\n";
+    }
+}
+
+void MainWindow::onDownloadButtonPressed()
+{
+    auto parseRes = parseBatch(ui->urlTextEdit->toPlainText(), ui->dirTextEdit->toPlainText(), ui->argsTextEdit->toPlainText());
+    if (parseRes.index() == 0) {
+        QMessageBox::critical(this, QStringLiteral("错误"), std::get<0>(parseRes));
+        return;
+    }
+    const auto& tasks = std::get<1>(parseRes);
+    for (const auto& t: tasks) {
+        processDownload(t.url, t.dir);
     }
 }
 

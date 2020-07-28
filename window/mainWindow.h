@@ -59,4 +59,6 @@ private slots:
 
         void updateTaskList();
         void updateStatusBar();
+
+        void processDownload(const QString& url, const QString& dir);
 };
