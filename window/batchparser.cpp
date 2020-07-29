@@ -46,7 +46,7 @@ std::variant<QString, QVector<int>> parseValues(const QString& token)
     for (; pos <= token.length(); ++pos) {
         if (pos == token.length() || token[pos] == ',') {
             if (lastCharType == CharType::Hyphen || lastCharType == CharType::Comma) {
-                return QStringLiteral("\"%1\"h中出现非法表达式：冗余的运算符'%2'").arg(token).arg(charTypeToQChar(lastCharType));
+                return QStringLiteral("\"%1\"h中出现非法表达式：冗余的运算符\'%2\'").arg(token).arg(charTypeToQChar(lastCharType));
             }
             if (hyphenPairFlag == 1) {
                 if (lastValue < hyphenPairValue) {
@@ -74,7 +74,7 @@ std::variant<QString, QVector<int>> parseValues(const QString& token)
         }
         else if (token[pos] == '-') {
             if (lastCharType != CharType::Digit || hyphenPairFlag >= 1) {
-                return QStringLiteral("\"%1\"中出现非法表达式：冗余的运算符'-'").arg(token);
+                return QStringLiteral("\"%1\"中出现非法表达式：冗余的运算符\'-\'").arg(token);
             }
             hyphenPairFlag = 1;
             hyphenPairValue = lastValue;
@@ -91,9 +91,9 @@ std::variant<QString, QVector<int>> parseValues(const QString& token)
 
 std::variant<QString, BatchArgument> parseToken(const QString& token)
 {
-    QStringList splitByAssignment = token.split(QChar('='), Qt::SkipEmptyParts);
+    QStringList splitByAssignment = token.split(QChar('='), QString::SkipEmptyParts);
     if (splitByAssignment.length() > 2) {
-        return QStringLiteral("\"%1\"中出现非法表达式：冗余的运算符'='").arg(token);
+        return QStringLiteral("\"%1\"中出现非法表达式：冗余的运算符\'=\'").arg(token);
     }
 
     BatchArgument res;
@@ -111,7 +111,7 @@ std::variant<QString, BatchArgument> parseToken(const QString& token)
 std::variant<QString, QVector<BatchArgument>> parseArgs(const QString& args)
 {
     QVector<BatchArgument> res;
-    QStringList tokens = args.split(QChar(' '), Qt::SkipEmptyParts);
+    QStringList tokens = args.split(QChar(' '), QString::SkipEmptyParts);
 
     for (const auto& token: tokens) {
         auto tokenRes = parseToken(token);
@@ -148,7 +148,7 @@ std::variant<QString, QVector<QString>> parsePath(const QString& batch, const QV
                 int next = i + 1;
                 for (; next < batch.length() && batch[next] != '}'; next++) {}
                 if (next == batch.length()) {
-                    return QStringLiteral("\"%1\"中出现非法表达式：缺失定界符'}'").arg(batch);
+                    return QStringLiteral("\"%1\"中出现非法表达式：缺失定界符\'}\'").arg(batch);
                 }
                 //batch[next] == '}'
                 QString argName = batch.mid(i + 1, next - i - 1);
