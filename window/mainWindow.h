@@ -3,7 +3,6 @@
 #include<QMainWindow>
 #include<QLabel>
 #include<any>
-#include<viewModel/viewModel.h>
 #include"../common/cslbase.h"
 #include"ui_mainWindow.h"
 #include<QFileDialog>

@@ -88,7 +88,6 @@ void MainWindow::processDownload(const QString& url, const QString& dir)
         typeID = TYPE_PHOTO;
         break;
     }
-    //m_viewModel->get_SetTypeCommand()(typeID);
 
     bool res = m_cmdFunc_Download(std::any(WebTask{0,url.toStdString(),dir.toStdString(),typeID}));
     if (res) {
