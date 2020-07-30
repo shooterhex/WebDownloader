@@ -6,7 +6,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
-#include <QMessageBox>
 #include <QtDebug>
 
 //Windows下编译工程时，需要在QMake中添加WINDOWS宏的定义

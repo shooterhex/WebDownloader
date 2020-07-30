@@ -10,6 +10,6 @@ void App::run()
     _viewModel.SetModel(spModel);
 
     _mainWindow.set_DownloadCommand(_viewModel.get_DownloadCommand());
-    _mainWindow.setViewModel(&_viewModel);
+    _mainWindow.set_GetTaskListCommand(_viewModel.get_GetTaskListFunc());
     _mainWindow.show();
 }

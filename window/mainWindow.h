@@ -28,7 +28,7 @@ class MainWindow:public QMainWindow
         //void set_ptrAboutCommand(std::shared_ptr<ICommandBase> ptrCommand);
 
         void set_DownloadCommand(CommandFunc&& cf);
-        void setViewModel(ViewModel* viewModel);
+        void set_GetTaskListCommand(GetTaskListFunc&& cf);
 
 private slots:
         void onDownloadButtonPressed();
@@ -51,8 +51,7 @@ private slots:
         QLabel* m_statusBarLabel;
 
         CommandFunc m_cmdFunc_Download;
-        ViewModel* m_viewModel;
-
+        GetTaskListFunc m_cmdFunc_GetTaskList;
         //Number of tasks in the task list
         int m_nTasks;
 

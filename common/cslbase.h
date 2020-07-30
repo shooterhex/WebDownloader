@@ -28,6 +28,9 @@
 #include <filesystem>
 #include <any>
 
+#include "def.h"
+#include <QQueue>
+
 #define HTMLTEXT 100
 //framework
 
@@ -40,6 +43,8 @@
 
 //   [](std::any&& param)->bool
 typedef std::function<bool(std::any&&)>  CommandFunc;
+
+typedef std::function<std::shared_ptr<QQueue<WebTask>>()>   GetTaskListFunc;
 
 
 // Property Notification

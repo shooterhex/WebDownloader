@@ -27,6 +27,7 @@ public:
     CommandFunc get_SetDirCommand();
     CommandFunc get_SetTypeCommand();
     CommandFunc get_DownloadCommand();
+    GetTaskListFunc get_GetTaskListFunc();
 //methods
     void SetModel(const std::shared_ptr<Model>& spModel);
 

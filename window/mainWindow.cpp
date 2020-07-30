@@ -69,15 +69,13 @@ void MainWindow::set_DownloadCommand(CommandFunc&& cf)
     m_cmdFunc_Download = std::move(cf);
 };
 
-void MainWindow::setViewModel(ViewModel* viewModel)
+void MainWindow::set_GetTaskListCommand(GetTaskListFunc &&cf)
 {
-    m_viewModel = viewModel;
+    m_cmdFunc_GetTaskList = std::move(cf);
 }
 
 void MainWindow::processDownload(const QString& url, const QString& dir)
 {
-    set_DownloadCommand(m_viewModel->get_DownloadCommand());
-
     int typeID = -1;
     switch (ui->fileTypeComboBox->currentIndex()) {
     case 0: //HTML
@@ -159,7 +157,7 @@ void MainWindow::onRefreshTaskListButtonPressed()
 
 void MainWindow::updateTaskList()
 {
-    auto queue = m_viewModel->get_TaskList();
+    auto queue = m_cmdFunc_GetTaskList();
     if (! queue) {
         QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("加载任务队列时失败！"));
         return;

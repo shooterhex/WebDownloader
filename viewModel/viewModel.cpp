@@ -105,3 +105,10 @@ CommandFunc ViewModel::get_SetTypeCommand()
         return this->m_spModel->setType(std::any_cast<int>(param));
     };
 };
+
+GetTaskListFunc ViewModel::get_GetTaskListFunc()
+{
+    return [this] {
+        return this->_taskList;
+    };
+}
